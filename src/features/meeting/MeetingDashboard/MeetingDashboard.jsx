@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import { Grid, Button } from "semantic-ui-react";
-import EventList from "../EventList/EventList";
-import EventForm from "../EventForm/EventForm";
+import MeetingList from "../MeetingList/MeetingList";
+import MeetingForm from "../MeetingForm/MeetingForm";
+import cuid from "cuid";
 
 const meetingsFromDashboard = [
   {
@@ -11,10 +12,10 @@ const meetingsFromDashboard = [
     category: "culture",
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus sollicitudin ligula eu leo tincidunt, quis scelerisque magna dapibus. Sed eget ipsum vel arcu vehicula ullamcorper.",
-    city: "London, UK",
+    branch: "London, UK",
     venue: "Tower of London, St Katharine's & Wapping, London",
-    hostedBy: "Bob",
-    hostPhotoURL: "https://randomuser.me/api/portraits/men/20.jpg",
+    chairedBy: "Bob",
+    chairPhotoURL: "https://randomuser.me/api/portraits/men/20.jpg",
     attendees: [
       {
         id: "a",
@@ -35,10 +36,10 @@ const meetingsFromDashboard = [
     category: "drinks",
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus sollicitudin ligula eu leo tincidunt, quis scelerisque magna dapibus. Sed eget ipsum vel arcu vehicula ullamcorper.",
-    city: "London, UK",
+    branch: "London, UK",
     venue: "Punch & Judy, Henrietta Street, London, UK",
-    hostedBy: "Tom",
-    hostPhotoURL: "https://randomuser.me/api/portraits/men/22.jpg",
+    chairedBy: "Tom",
+    chairPhotoURL: "https://randomuser.me/api/portraits/men/22.jpg",
     attendees: [
       {
         id: "b",
@@ -54,36 +55,50 @@ const meetingsFromDashboard = [
   }
 ];
 
-class EventDashboard extends Component {
+class MeetingDashboard extends Component {
   state = {
     meetings: meetingsFromDashboard,
     isOpen: false
   };
 
   handleIsOpenToggle = () => {
-    this.setState(({isOpen}) => ({
+    this.setState(({ isOpen }) => ({
       isOpen: !isOpen
+    }));
+  };
+
+  handleCreateMeeting = newMeeting => {
+    newMeeting.id = cuid();
+    newMeeting.hostPhotoURL = "/assets/user.png";
+    this.setState(({ meetings }) => ({
+      meetings: [...meetings, newMeeting],
+      isOpen: false
     }));
   };
 
   render() {
     const { meetings, isOpen } = this.state;
-    return ( 
+    return (
       <Grid>
         <Grid.Column width={10}>
-          <EventList meetings={meetings} />
+          <MeetingList meetings={meetings} />
         </Grid.Column>
         <Grid.Column width={6}>
           <Button
             onClick={this.handleIsOpenToggle}
             positive
-            content='Create Event'
+            content='Create Meeting'
           />
-          {isOpen && <EventForm cancelFormOpen={this.handleIsOpenToggle} />}
+          {isOpen && (
+            <MeetingForm
+              createMeeting={this.handleCreateMeeting}
+              cancelFormOpen={this.handleIsOpenToggle}
+            />
+          )}
         </Grid.Column>
       </Grid>
     );
   }
 }
 
-export default EventDashboard;
+export default MeetingDashboard;

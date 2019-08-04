@@ -7,10 +7,10 @@ class NavBar extends Component {
       <Menu inverted fixed='top'>
         <Container>
           <Menu.Item header>
-            <img src='assets/omni.png' alt='logo' />
+            <img src='/assets/omni.png' alt='logo' />
             OMNI
           </Menu.Item>
-          <Menu.Item name='Events' />
+          <Menu.Item name='Meetings' />
           <Menu.Item>
             <Button floated='right' positive inverted content='Create Event' />
           </Menu.Item>

@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { Segment, Item, Icon, List, Button } from "semantic-ui-react";
-import EventListAttendee from "./EventListAttendee";
+import MeetingListAttendee from "./MeetingListAttendee";
 
-class EventListItem extends Component {
+class MeetingListItem extends Component {
   render() {
     const { meeting } = this.props;
     return (
@@ -10,11 +10,11 @@ class EventListItem extends Component {
         <Segment>
           <Item.Group>
             <Item>
-              <Item.Image size='tiny' circular src={meeting.hostPhotoURL} />
+              <Item.Image size='tiny' circular src={meeting.chairPhotoURL} />
               <Item.Content>
                 <Item.Header as='a'>{meeting.title}</Item.Header>
                 <Item.Description>
-                  Hosted by <a>{meeting.hostedBy}</a>
+                  Chaired by <a>{meeting.chairedBy}</a>
                 </Item.Description>
               </Item.Content>
             </Item>
@@ -28,8 +28,8 @@ class EventListItem extends Component {
         </Segment>
         <Segment secondary>
           <List horizontal>
-            {meeting.attendees.map(attendee => (
-              <EventListAttendee key={attendee.id} attendee={attendee} />
+            {meeting.attendees && meeting.attendees.map(attendee => (
+              <MeetingListAttendee key={attendee.id} attendee={attendee} />
             ))}
           </List>
         </Segment>
@@ -42,4 +42,4 @@ class EventListItem extends Component {
   }
 }
 
-export default EventListItem;
+export default MeetingListItem;

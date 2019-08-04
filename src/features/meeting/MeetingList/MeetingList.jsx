@@ -1,16 +1,16 @@
 import React, { Component, Fragment } from "react";
-import EventListItem from "./EventListItem";
+import MeetingListItem from "./MeetingListItem";
 
-class EventList extends Component {
+class MeetingList extends Component {
   render() {
     return (
       <Fragment>
         {this.props.meetings.map(meeting => (
-          <EventListItem key={meeting.id} meeting={meeting} />
+          <MeetingListItem key={meeting.id} meeting={meeting} />
         ))}
       </Fragment>
     );
   }
 }
 
-export default EventList;
+export default MeetingList;
