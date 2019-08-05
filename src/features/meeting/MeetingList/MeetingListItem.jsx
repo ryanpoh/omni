@@ -4,7 +4,7 @@ import MeetingListAttendee from "./MeetingListAttendee";
 
 class MeetingListItem extends Component {
   render() {
-    const { meeting } = this.props;
+    const { meeting, selectedMeeting, deleteMeeting } = this.props;
     return (
       <Segment.Group>
         <Segment>
@@ -28,18 +28,35 @@ class MeetingListItem extends Component {
         </Segment>
         <Segment secondary>
           <List horizontal>
-            {meeting.attendees && meeting.attendees.map(attendee => (
-              <MeetingListAttendee key={attendee.id} attendee={attendee} />
-            ))}
+            {meeting.attendees &&
+              meeting.attendees.map(attendee => (
+                <MeetingListAttendee key={attendee.id} attendee={attendee} />
+              ))}
           </List>
         </Segment>
         <Segment clearing>
           <span>{meeting.description}</span>
-          <Button as='a' color='teal' floated='right' content='View' />
+          <Button
+            onClick={() => selectedMeeting(meeting)}
+            as='a'
+            color='teal'
+            floated='right'
+            content='View'
+          />
+          <Button
+            onClick={() => deleteMeeting(meeting.id)}
+            as='a'
+            color='red'
+            floated='right'
+            content='Delete'
+          />
         </Segment>
       </Segment.Group>
     );
   }
 }
+
+// passes meeting into selectedMeeting function
+// onClick evt ordering is important
 
 export default MeetingListItem;

@@ -8,7 +8,7 @@ const meetingsFromDashboard = [
   {
     id: "1",
     title: "Trip to Tower of London",
-    date: "2018-03-27T11:00:00+00:00",
+    date: "2018-03-27",
     category: "culture",
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus sollicitudin ligula eu leo tincidunt, quis scelerisque magna dapibus. Sed eget ipsum vel arcu vehicula ullamcorper.",
@@ -32,7 +32,7 @@ const meetingsFromDashboard = [
   {
     id: "2",
     title: "Trip to Punch and Judy Pub",
-    date: "2018-03-28T14:00:00+00:00",
+    date: "2018-03-28",
     category: "drinks",
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus sollicitudin ligula eu leo tincidunt, quis scelerisque magna dapibus. Sed eget ipsum vel arcu vehicula ullamcorper.",
@@ -58,13 +58,35 @@ const meetingsFromDashboard = [
 class MeetingDashboard extends Component {
   state = {
     meetings: meetingsFromDashboard,
-    isOpen: false
+    isOpen: false,
+    selectedMeeting: null
   };
 
-  handleIsOpenToggle = () => {
-    this.setState(({ isOpen }) => ({
-      isOpen: !isOpen
-    }));
+  // handleIsOpenToggle = () => {
+  //   this.setState(({ isOpen }) => ({
+  //     isOpen: !isOpen
+  //   }));
+  // };
+
+  handleCreateFormOpen = () => {
+    this.setState({
+      isOpen: true,
+      selectedMeeting: null
+    });
+  };
+
+  handleCreateFormClose = () => {
+    this.setState({
+      isOpen: false
+    });
+  };
+
+  handleSelectedMeeting = meeting => {
+    console.log(meeting);
+    this.setState({
+      selectedMeeting: meeting,
+      isOpen: true
+    });
   };
 
   handleCreateMeeting = newMeeting => {
@@ -76,23 +98,50 @@ class MeetingDashboard extends Component {
     }));
   };
 
+  handleUpdateMeeting = updatedMeeting => {
+    this.setState(({ meetings }) => ({
+      meetings: meetings.map(meeting => {
+        if (meeting.id === updatedMeeting.id) {
+          return { ...updatedMeeting };
+        } else {
+          return meeting;
+        }
+      }),
+      isOpen: false,
+      selectedMeeting: null
+    }));
+  };
+
+  handleDeleteMeeting = id => {
+    this.setState(({ meetings }) => ({
+        meetings: meetings.filter(m => m.id !== id) 
+    }))
+  };
+
   render() {
-    const { meetings, isOpen } = this.state;
+    const { meetings, isOpen, selectedMeeting } = this.state;
     return (
       <Grid>
         <Grid.Column width={10}>
-          <MeetingList meetings={meetings} />
+          <MeetingList
+            deleteMeeting ={this.handleDeleteMeeting}
+            meetings={meetings}
+            selectedMeeting={this.handleSelectedMeeting}
+          />
         </Grid.Column>
         <Grid.Column width={6}>
           <Button
-            onClick={this.handleIsOpenToggle}
+            onClick={this.handleCreateFormOpen}
             positive
             content='Create Meeting'
           />
           {isOpen && (
             <MeetingForm
+              key={selectedMeeting ? selectedMeeting.id : 0}
+              updateMeeting={this.handleUpdateMeeting}
+              selectedMeeting={selectedMeeting}
               createMeeting={this.handleCreateMeeting}
-              cancelFormOpen={this.handleIsOpenToggle}
+              cancelFormOpen={this.handleCreateFormClose}
             />
           )}
         </Grid.Column>

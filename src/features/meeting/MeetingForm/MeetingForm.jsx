@@ -10,12 +10,26 @@ class MeetingForm extends Component {
     chairedBy: ""
   };
 
+  componentDidMount() {
+    if (this.props.selectedMeeting !== null) {
+      this.setState({
+        ...this.props.selectedMeeting
+      });
+    }
+  }
+
+  //because when creating a meeting, it does not have an id yet. But if looking at existing meeting, it has an id
   handleFormSubmit = evt => {
     evt.preventDefault();
-    this.props.createMeeting(this.state)
+    if (this.state.id){
+      this.props.updateMeeting(this.state)
+    } else {
+      this.props.createMeeting(this.state);
+    }
+
   };
 
-  handleInputChange = ({target: {name, value}}) => {
+  handleInputChange = ({ target: { name, value } }) => {
     this.setState({
       [name]: value
     });
