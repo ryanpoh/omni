@@ -1,18 +1,26 @@
 import React, { Component } from "react";
 import { Menu, Container, Button } from "semantic-ui-react";
+import { NavLink, Link } from "react-router-dom";
 
 class NavBar extends Component {
   render() {
     return (
       <Menu inverted fixed='top'>
         <Container>
-          <Menu.Item header>
+          <Menu.Item as={NavLink} exact to='/' header>
             <img src='/assets/omni.png' alt='logo' />
             OMNI
           </Menu.Item>
-          <Menu.Item name='Meetings' />
+          <Menu.Item as={NavLink} to='/meetings' name='Meetings' />
           <Menu.Item>
-            <Button floated='right' positive inverted content='Create Meeting' />
+            <Button
+              as={Link}
+              to='/createMeeting'
+              floated='right'
+              positive
+              inverted
+              content='Create Meeting'
+            />
           </Menu.Item>
           <Menu.Item position='right'>
             <Button basic inverted content='Login' />
