@@ -1,9 +1,21 @@
 import React, { Component } from "react";
 import { Menu, Container, Button } from "semantic-ui-react";
-import { NavLink, Link } from "react-router-dom";
+import { NavLink, Link, withRouter } from "react-router-dom";
+import SignedInMenu from "../Menus/SignedInMenu";
+import SignedOutMenu from "../Menus/SignedOutMenu";
 
 class NavBar extends Component {
+  state = {
+    authenticated: true
+  };
+  handleSignIn = () => this.setState({ authenticated: true });
+  handleSignOut = () => {
+    this.setState({ authenticated: false });
+    this.props.history.push("/");
+  };
+
   render() {
+    const { authenticated } = this.state;
     return (
       <Menu inverted fixed='top'>
         <Container>
@@ -22,19 +34,17 @@ class NavBar extends Component {
               content='Create Meeting'
             />
           </Menu.Item>
-          <Menu.Item position='right'>
-            <Button basic inverted content='Login' />
-            <Button
-              basic
-              inverted
-              content='Sign Out'
-              style={{ marginLeft: "0.5em" }}
-            />
-          </Menu.Item>
+          {authenticated ? (
+            <SignedInMenu signOut={this.handleSignOut} />
+          ) : (
+            <SignedOutMenu signIn={this.handleSignIn} />
+          )}
         </Container>
       </Menu>
     );
   }
 }
 
-export default NavBar;
+export default withRouter(NavBar);
+
+// higher order withRouter Component. Give NavBar Router Powers

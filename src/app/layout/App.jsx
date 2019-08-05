@@ -10,20 +10,29 @@ import SettingsDashboard from "../../features/user/Settings/SettingsDashboard";
 import MeetingForm from "../../features/meeting/MeetingForm/MeetingForm";
 import UserDetailedPage from "../../features/user/UserDetailed/UserDetailedPage";
 
+
+//seperate homepage away from app
 class App extends Component {
   render() {
     return (
       <Fragment>
-        <NavBar />
-        <Container className='main'>
-          <Route exact path='/' component={HomePage} />
-          <Route path='/meetings' component={MeetingDashboard} />
-          <Route path='/meetings/:id' component={MeetingDetailedPage} />
-          <Route path='/employees' component={EmployeeDashboard} />
-          <Route path='/profile/:id' component={UserDetailedPage} />
-          <Route path='/settings' component={SettingsDashboard} />
-          <Route path='/createMeeting' component={MeetingForm} />
-        </Container>
+        <Route exact path='/' component={HomePage} />
+        <Route
+          path='/(.+)'
+          render={() => (
+            <Fragment>
+              <NavBar />
+              <Container className='main'>
+                <Route path='/meetings' component={MeetingDashboard} />
+                <Route path='/meetings/:id' component={MeetingDetailedPage} />
+                <Route path='/employees' component={EmployeeDashboard} />
+                <Route path='/profile/:id' component={UserDetailedPage} />
+                <Route path='/settings' component={SettingsDashboard} />
+                <Route path='/createMeeting' component={MeetingForm} />
+              </Container>
+            </Fragment>
+          )}
+        />
       </Fragment>
     );
   }
