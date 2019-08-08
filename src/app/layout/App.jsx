@@ -9,6 +9,7 @@ import EmployeeDashboard from "../../features/user/EmployeeDashboard/EmployeeDas
 import SettingsDashboard from "../../features/user/Settings/SettingsDashboard";
 import MeetingForm from "../../features/meeting/MeetingForm/MeetingForm";
 import UserDetailedPage from "../../features/user/UserDetailed/UserDetailedPage";
+import TestComponent from "../../features/test/TestComponent";
 
 
 //seperate homepage away from app
@@ -29,6 +30,7 @@ class App extends Component {
                 <Route path='/profile/:id' component={UserDetailedPage} />
                 <Route path='/settings' component={SettingsDashboard} />
                 <Route path='/createMeeting' component={MeetingForm} />
+                <Route path='/test' component={TestComponent} />
               </Container>
             </Fragment>
           )}

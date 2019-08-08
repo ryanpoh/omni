@@ -7,14 +7,14 @@ import cuid from "cuid";
 const meetingsFromDashboard = [
   {
     id: "1",
-    title: "Trip to Tower of London",
+    title: "Meeting with Patricia London",
     date: "2018-03-27",
     category: "culture",
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus sollicitudin ligula eu leo tincidunt, quis scelerisque magna dapibus. Sed eget ipsum vel arcu vehicula ullamcorper.",
     branch: "London, UK",
     venue: "Tower of London, St Katharine's & Wapping, London",
-    chairedBy: "Bob",
+    chairedBy: "John",
     chairPhotoURL: "https://randomuser.me/api/portraits/men/20.jpg",
     attendees: [
       {
@@ -31,14 +31,14 @@ const meetingsFromDashboard = [
   },
   {
     id: "2",
-    title: "Trip to Punch and Judy Pub",
+    title: "Meeting with Lee and Judy",
     date: "2018-03-28",
     category: "drinks",
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus sollicitudin ligula eu leo tincidunt, quis scelerisque magna dapibus. Sed eget ipsum vel arcu vehicula ullamcorper.",
     branch: "London, UK",
     venue: "Punch & Judy, Henrietta Street, London, UK",
-    chairedBy: "Tom",
+    chairedBy: "Raj",
     chairPhotoURL: "https://randomuser.me/api/portraits/men/22.jpg",
     attendees: [
       {
