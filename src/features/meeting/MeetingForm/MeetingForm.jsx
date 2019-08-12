@@ -1,14 +1,37 @@
 import React, { Component } from "react";
 import { Segment, Form, Button } from "semantic-ui-react";
+import {connect} from 'react-redux';
+import {createMeeting, updateMeeting} from '../meetingActions';
+import cuid from 'cuid'
 
-class MeetingForm extends Component {
-  state = {
+const mapState = (state, ownProps) => {
+  const meetingId = ownProps.match.params.id;
+
+  let meeting = {
     title: "",
-    date: "",
+    date: "", 
     branch: "",
     venue: "",
     chairedBy: ""
-  };
+  }
+
+  if (meetingId && state.meetings.length > 0) {
+    meeting = state.meetings.filter(meeting => meeting.id === meetingId)[0]
+  }
+
+
+  return {
+    meeting
+  }
+}
+
+const actions ={
+  createMeeting,
+  updateMeeting
+}
+
+class MeetingForm extends Component {
+  state = {...this.props.meeting};
 
   componentDidMount() {
     if (this.props.selectedMeeting !== null) {
@@ -23,10 +46,16 @@ class MeetingForm extends Component {
     evt.preventDefault();
     if (this.state.id){
       this.props.updateMeeting(this.state)
+      this.props.history.push(`/meetings/${this.state.id}`)
     } else {
-      this.props.createMeeting(this.state);
+      const newMeeting = {
+        ...this.state,
+        id: cuid(),
+        hostPhotoURL: "/assets/user.png"
+      }
+      this.props.createMeeting(newMeeting);
+      this.props.history.push(`/meetings`)
     }
-
   };
 
   handleInputChange = ({ target: { name, value } }) => {
@@ -36,7 +65,6 @@ class MeetingForm extends Component {
   };
 
   render() {
-    const { cancelFormOpen } = this.props;
     const { title, date, branch, venue, chairedBy } = this.state;
     return (
       <Segment>
@@ -90,7 +118,7 @@ class MeetingForm extends Component {
           <Button positive type='submit'>
             Submit
           </Button>
-          <Button onClick={cancelFormOpen} type='button'>
+          <Button onClick={this.props.history.goBack} type='button'>
             Cancel
           </Button>
         </Form>
@@ -99,4 +127,4 @@ class MeetingForm extends Component {
   }
 }
 
-export default MeetingForm;
+export default connect(mapState, actions)(MeetingForm);

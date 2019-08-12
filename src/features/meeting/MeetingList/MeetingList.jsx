@@ -3,14 +3,13 @@ import MeetingListItem from "./MeetingListItem";
 
 class MeetingList extends Component {
   render() {
-    const { meetings, selectedMeeting, deleteMeeting } = this.props;
+    const { meetings, deleteMeeting } = this.props;
     return (
       <Fragment>
         {meetings.map(meeting => (
           <MeetingListItem
             key={meeting.id}
             meeting={meeting}
-            selectedMeeting={selectedMeeting}
             deleteMeeting={deleteMeeting}
           />
         ))}

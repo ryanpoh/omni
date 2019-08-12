@@ -1,10 +1,11 @@
 import React, { Component } from "react";
 import { Segment, Item, Icon, List, Button } from "semantic-ui-react";
 import MeetingListAttendee from "./MeetingListAttendee";
+import { Link } from "react-router-dom";
 
 class MeetingListItem extends Component {
   render() {
-    const { meeting, selectedMeeting, deleteMeeting } = this.props;
+    const { meeting, deleteMeeting } = this.props;
     return (
       <Segment.Group>
         <Segment>
@@ -36,19 +37,20 @@ class MeetingListItem extends Component {
         </Segment>
         <Segment clearing>
           <span>{meeting.description}</span>
+
           <Button
-            onClick={() => selectedMeeting(meeting)}
-            as='a'
-            color='teal'
-            floated='right'
-            content='View'
-          />
-          <Button
-            onClick={() => deleteMeeting(meeting.id)}
+            onClick={() => deleteMeeting(meeting)}
             as='a'
             color='red'
             floated='right'
             content='Delete'
+          />
+          <Button
+            as={Link}
+            to={`/meetings/${meeting.id}`}
+            color='teal'
+            floated='right'
+            content='View'
           />
         </Segment>
       </Segment.Group>

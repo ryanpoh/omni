@@ -23,7 +23,7 @@ class NavBar extends Component {
             <img src='/assets/omni.png' alt='logo' />
             OMNI
           </Menu.Item>
-          <Menu.Item as={NavLink} to='/meetings' name='Meetings' />
+          <Menu.Item as={NavLink} exact to='/meetings' name='Meetings' />
           <Menu.Item>
             <Button
               as={Link}
