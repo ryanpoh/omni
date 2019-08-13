@@ -1,130 +1,160 @@
 import React, { Component } from "react";
-import { Segment, Form, Button } from "semantic-ui-react";
-import {connect} from 'react-redux';
-import {createMeeting, updateMeeting} from '../meetingActions';
-import cuid from 'cuid'
+import { Segment, Form, Button, Grid, Header } from "semantic-ui-react";
+import { connect } from "react-redux";
+import { reduxForm, Field } from "redux-form";
+import { createMeeting, updateMeeting } from "../meetingActions";
+import {
+  combineValidators,
+  composeValidators,
+  isRequired,
+  hasLengthGreaterThan
+} from "revalidate";
+import cuid from "cuid";
+import TextInput from "../../../app/common/form/TextInput";
+import TextArea from "../../../app/common/form/TextArea";
+import SelectInput from "../../../app/common/form/SelectInput";
+import DateInput from "../../../app/common/form/DateInput";
 
 const mapState = (state, ownProps) => {
   const meetingId = ownProps.match.params.id;
 
-  let meeting = {
-    title: "",
-    date: "", 
-    branch: "",
-    venue: "",
-    chairedBy: ""
-  }
+  let meeting = {};
 
   if (meetingId && state.meetings.length > 0) {
-    meeting = state.meetings.filter(meeting => meeting.id === meetingId)[0]
+    meeting = state.meetings.filter(meeting => meeting.id === meetingId)[0];
   }
-
 
   return {
-    meeting
-  }
-}
+    initialValues: meeting
+  };
+};
 
-const actions ={
+const actions = {
   createMeeting,
   updateMeeting
-}
+};
+
+const validate = combineValidators({
+  title: isRequired({ message: "The meeting title is required." }),
+  category: isRequired({ message: "The category is required." }),
+  description: composeValidators(
+    isRequired({ message: "Please enter a description." }),
+    hasLengthGreaterThan(4)({ message: "Please enter at least 5 characters." })
+  )(),
+  branch: isRequired("branch"), // prints default error message
+  venue: isRequired("venue"),
+  date: isRequired("date")
+});
+
+const category = [
+  { key: "drinks", text: "Drinks", value: "drinks" },
+  { key: "culture", text: "Culture", value: "culture" },
+  { key: "film", text: "Film", value: "film" },
+  { key: "food", text: "Food", value: "food" },
+  { key: "music", text: "Music", value: "music" },
+  { key: "travel", text: "Travel", value: "travel" }
+];
 
 class MeetingForm extends Component {
-  state = {...this.props.meeting};
-
-  componentDidMount() {
-    if (this.props.selectedMeeting !== null) {
-      this.setState({
-        ...this.props.selectedMeeting
-      });
-    }
-  }
-
   //because when creating a meeting, it does not have an id yet. But if looking at existing meeting, it has an id
-  handleFormSubmit = evt => {
-    evt.preventDefault();
-    if (this.state.id){
-      this.props.updateMeeting(this.state)
-      this.props.history.push(`/meetings/${this.state.id}`)
+  doHandleSubmit = values => {
+    if (this.props.initialValues.id) {
+      this.props.updateMeeting(values);
+      this.props.history.push(`/meetings/${this.props.initialValues.id}`);
     } else {
       const newMeeting = {
-        ...this.state,
+        ...values,
         id: cuid(),
-        hostPhotoURL: "/assets/user.png"
-      }
+        chairPhotoURL: "/assets/user.png",
+        chairedBy: "Bob"
+      };
       this.props.createMeeting(newMeeting);
-      this.props.history.push(`/meetings`)
+      this.props.history.push(`/meetings/${newMeeting.id}`);
     }
-  };
-
-  handleInputChange = ({ target: { name, value } }) => {
-    this.setState({
-      [name]: value
-    });
   };
 
   render() {
-    const { title, date, branch, venue, chairedBy } = this.state;
+    const {
+      history,
+      initialValues,
+      invalid,
+      submitting,
+      pristine
+    } = this.props;
     return (
-      <Segment>
-        <Form onSubmit={this.handleFormSubmit} autoComplete='off'>
-          <Form.Field>
-            <label>Meeting Title</label>
-            <input
-              name='title'
-              onChange={this.handleInputChange}
-              value={title}
-              placeholder='Meeting Title'
-            />
-          </Form.Field>
-          <Form.Field>
-            <label>Meeting Date</label>
-            <input
-              name='date'
-              onChange={this.handleInputChange}
-              value={date}
-              type='date'
-              placeholder='Meeting Date'
-            />
-          </Form.Field>
-          <Form.Field>
-            <label>Branch</label>
-            <input
-              name='branch'
-              onChange={this.handleInputChange}
-              value={branch}
-              placeholder='Company branch where meeting is taking place'
-            />
-          </Form.Field>
-          <Form.Field>
-            <label>Venue</label>
-            <input
-              name='venue'
-              onChange={this.handleInputChange}
-              value={venue}
-              placeholder='Enter the Venue of the meeting'
-            />
-          </Form.Field>
-          <Form.Field>
-            <label>Chaired By</label>
-            <input
-              name='chairedBy'
-              onChange={this.handleInputChange}
-              value={chairedBy}
-              placeholder='Enter the name of person in charge'
-            />
-          </Form.Field>
-          <Button positive type='submit'>
-            Submit
-          </Button>
-          <Button onClick={this.props.history.goBack} type='button'>
-            Cancel
-          </Button>
-        </Form>
-      </Segment>
+      <Grid>
+        <Grid.Column width={10}>
+          <Segment>
+            <Header sub color='teal' content='Meeting Details' />
+            <Form
+              onSubmit={this.props.handleSubmit(this.doHandleSubmit)}
+              autoComplete='off'
+            >
+              <Field
+                name='title'
+                component={TextInput}
+                placeholder='Give your meeting a name.'
+              />
+              <Field
+                name='category'
+                component={SelectInput}
+                options={category}
+                //multiple = {true}  //allows multiple category selections
+                placeholder='What is your meeting about?'
+              />
+              <Field
+                name='description'
+                component={TextArea}
+                rows={3}
+                placeholder='Tell us about your meeting'
+              />
+              <Header sub color='teal' content='Meeting Location Details' />
+              <Field
+                name='branch'
+                component={TextInput}
+                placeholder='Branch where meeting is held'
+              />
+              <Field
+                name='venue'
+                component={TextInput}
+                placeholder='Meeting Venue'
+              />
+              <Field
+                name='date'
+                component={DateInput}
+                dateFormat= 'dd LLL yyyy h:mm a' //will be available in {...rest} object in DateInput component. Note 'LLL' is month
+                showTimeSelect //shows time picker
+                timeFormat='HH:mm'
+                placeholder='Meeting date'
+              />
+
+              <Button
+                disabled={invalid || submitting || pristine} //pristine means brand new state
+                positive
+                type='submit'
+              >
+                Submit
+              </Button>
+              <Button
+                onClick={
+                  initialValues.id
+                    ? () => history.push(`/meetings/${initialValues.id}`)
+                    : () => history.push(`/meetings`) //wrap these in an arrow function because you don't want the functions to immediatly run wahen page loads
+                }
+                type='button'
+              >
+                Cancel
+              </Button>
+            </Form>
+          </Segment>
+        </Grid.Column>
+      </Grid>
     );
   }
 }
 
-export default connect(mapState, actions)(MeetingForm);
+// connect parameters are both reduxForm and MeetingForm. whereas reduxForm's parameter is only MeetingForm
+export default connect(
+  mapState,
+  actions
+)(reduxForm({ form: "meetingForm", validate })(MeetingForm));
