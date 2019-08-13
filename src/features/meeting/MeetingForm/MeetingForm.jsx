@@ -1,8 +1,10 @@
+/*global google*/
 import React, { Component } from "react";
 import { Segment, Form, Button, Grid, Header } from "semantic-ui-react";
 import { connect } from "react-redux";
 import { reduxForm, Field } from "redux-form";
 import { createMeeting, updateMeeting } from "../meetingActions";
+import { geocodeByAddress, getLatLng } from "react-places-autocomplete";
 import {
   combineValidators,
   composeValidators,
@@ -14,6 +16,7 @@ import TextInput from "../../../app/common/form/TextInput";
 import TextArea from "../../../app/common/form/TextArea";
 import SelectInput from "../../../app/common/form/SelectInput";
 import DateInput from "../../../app/common/form/DateInput";
+import PlaceInput from "../../../app/common/form/PlaceInput";
 
 const mapState = (state, ownProps) => {
   const meetingId = ownProps.match.params.id;
@@ -56,8 +59,14 @@ const category = [
 ];
 
 class MeetingForm extends Component {
+  state = {
+    branchLatLng: {},
+    venueLatLng: {}
+  };
+
   //because when creating a meeting, it does not have an id yet. But if looking at existing meeting, it has an id
   doHandleSubmit = values => {
+    values.venueLatLng = this.state.venueLatLng;
     if (this.props.initialValues.id) {
       this.props.updateMeeting(values);
       this.props.history.push(`/meetings/${this.props.initialValues.id}`);
@@ -71,6 +80,33 @@ class MeetingForm extends Component {
       this.props.createMeeting(newMeeting);
       this.props.history.push(`/meetings/${newMeeting.id}`);
     }
+  };
+
+  handleCitySelect = selectedCity => {
+    //selects branch by city
+    geocodeByAddress(selectedCity)
+      .then(results => getLatLng(results[0]))
+      .then(latlng => {
+        this.setState({
+          branchLatLng: latlng
+        });
+      })
+      .then(() => {
+        this.props.change("branch", selectedCity);
+      });
+  };
+
+  handleVenueSelect = selectedVenue => {
+    geocodeByAddress(selectedVenue)
+      .then(results => getLatLng(results[0]))
+      .then(latlng => {
+        this.setState({
+          venueLatLng: latlng
+        });
+      })
+      .then(() => {
+        this.props.change("venue", selectedVenue);
+      });
   };
 
   render() {
@@ -111,18 +147,26 @@ class MeetingForm extends Component {
               <Header sub color='teal' content='Meeting Location Details' />
               <Field
                 name='branch'
-                component={TextInput}
-                placeholder='Branch where meeting is held'
+                component={PlaceInput}
+                options={{ types: ["(cities)"] }} //narrows down suggestions to just cities
+                onSelect={this.handleCitySelect}
+                placeholder='City branch where meeting will be held'
               />
               <Field
                 name='venue'
-                component={TextInput}
+                component={PlaceInput}
+                options={{
+                  location: new google.maps.LatLng(this.state.branchLatLng),
+                  radius: 1000,
+                  types: ["establishment"]
+                }}
+                onSelect={this.handleVenueSelect}
                 placeholder='Meeting Venue'
               />
               <Field
                 name='date'
                 component={DateInput}
-                dateFormat= 'dd LLL yyyy h:mm a' //will be available in {...rest} object in DateInput component. Note 'LLL' is month
+                dateFormat='dd LLL yyyy h:mm a' //will be available in {...rest} object in DateInput component. Note 'LLL' is month
                 showTimeSelect //shows time picker
                 timeFormat='HH:mm'
                 placeholder='Meeting date'

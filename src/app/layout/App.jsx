@@ -9,6 +9,7 @@ import EmployeeDashboard from "../../features/user/EmployeeDashboard/EmployeeDas
 import SettingsDashboard from "../../features/user/Settings/SettingsDashboard";
 import MeetingForm from "../../features/meeting/MeetingForm/MeetingForm";
 import UserDetailedPage from "../../features/user/UserDetailed/UserDetailedPage";
+import TestComponent from "../../features/test/TestComponent";
 
 //seperate homepage away from app
 class App extends Component {
@@ -32,6 +33,7 @@ class App extends Component {
                     path={["/createMeeting", "/manage/:id"]}
                     component={MeetingForm}
                   />
+                  <Route path='/test' component={TestComponent} />
                 </Switch>
               </Container>
             </Fragment>
