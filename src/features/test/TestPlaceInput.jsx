@@ -1,8 +1,5 @@
 import React from 'react';
-import PlacesAutocomplete, {
-  geocodeByAddress,
-  getLatLng,
-} from 'react-places-autocomplete';
+import PlacesAutocomplete from 'react-places-autocomplete';
 
 class TestPlaceInput extends React.Component {
   constructor(props) {
@@ -12,13 +9,6 @@ class TestPlaceInput extends React.Component {
 
   handleChange = address => {
     this.setState({ address });
-  };
-
-  handleSelect = address => {
-    geocodeByAddress(address)
-      .then(results => getLatLng(results[0]))
-      .then(latLng => console.log('Success', latLng))
-      .catch(error => console.error('Error', error));
   };
 
   render() {
