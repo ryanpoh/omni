@@ -3,9 +3,11 @@ import { Grid } from "semantic-ui-react";
 import { connect } from "react-redux";
 import MeetingList from "../MeetingList/MeetingList";
 import { createMeeting, updateMeeting, deleteMeeting } from "../meetingActions";
+import LoadingComponent from "../../../app/layout/LoadingComponent";
 
 const mapState = state => ({
-  meetings: state.meetings
+  meetings: state.meetings,
+  loading: state.async.loading
 });
 
 const actions = {
@@ -22,7 +24,8 @@ class MeetingDashboard extends Component {
   };
 
   render() {
-    const { meetings } = this.props;
+    const { meetings, loading } = this.props;
+    if (loading) return <LoadingComponent /> // inverted= {false} will a darker loading screen
     return (
       <Grid>
         <Grid.Column width={10}>
