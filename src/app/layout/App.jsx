@@ -10,12 +10,14 @@ import SettingsDashboard from "../../features/user/Settings/SettingsDashboard";
 import MeetingForm from "../../features/meeting/MeetingForm/MeetingForm";
 import UserDetailedPage from "../../features/user/UserDetailed/UserDetailedPage";
 import TestComponent from "../../features/test/TestComponent";
+import ModalManager from "../../features/modals/ModalManager";
 
 //seperate homepage away from app
 class App extends Component {
   render() {
     return (
       <Fragment>
+        <ModalManager />
         <Route exact path='/' component={HomePage} />
         <Route
           path='/(.+)'
