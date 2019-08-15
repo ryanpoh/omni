@@ -1,6 +1,7 @@
-import React, { useState } from "react";
-import { Segment, Grid, Icon, Button } from "semantic-ui-react";
-import MeetingDetailedMap from "./MeetingDetailedMap";
+import React, { useState } from 'react';
+import { Segment, Grid, Icon, Button } from 'semantic-ui-react';
+import MeetingDetailedMap from './MeetingDetailedMap';
+import { format, parseISO } from 'date-fns';
 
 const MeetingDetailedInfo = ({ meeting }) => {
   const [isMapOpen, showMapToggle] = useState(false);
@@ -22,7 +23,12 @@ const MeetingDetailedInfo = ({ meeting }) => {
             <Icon name='calendar' size='large' color='teal' />
           </Grid.Column>
           <Grid.Column width={15}>
-            <span>{meeting.date}</span>
+            {meeting.date && (
+              <span>
+                {format(parseISO(meeting.date), 'EEEE do LLL')} at{' '}
+                {format(parseISO(meeting.date), 'h:mm a')}
+              </span>
+            )}
           </Grid.Column>
         </Grid>
       </Segment>

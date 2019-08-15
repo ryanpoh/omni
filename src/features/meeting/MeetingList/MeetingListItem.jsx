@@ -1,7 +1,8 @@
-import React, { Component } from "react";
-import { Segment, Item, Icon, List, Button } from "semantic-ui-react";
-import MeetingListAttendee from "./MeetingListAttendee";
-import { Link } from "react-router-dom";
+import React, { Component } from 'react';
+import { Segment, Item, Icon, List, Button } from 'semantic-ui-react';
+import MeetingListAttendee from './MeetingListAttendee';
+import { Link } from 'react-router-dom';
+import { format, parseISO } from 'date-fns'; //curly braces are functions. non-curly are classes. data fns doesnt recognize ISO date format
 
 class MeetingListItem extends Component {
   render() {
@@ -15,7 +16,7 @@ class MeetingListItem extends Component {
               <Item.Content>
                 <Item.Header as='a'>{meeting.title}</Item.Header>
                 <Item.Description>
-                  Chaired by <a>{meeting.chairedBy}</a>
+                  Chaired by {meeting.chairedBy}
                 </Item.Description>
               </Item.Content>
             </Item>
@@ -23,7 +24,8 @@ class MeetingListItem extends Component {
         </Segment>
         <Segment>
           <span>
-            <Icon name='clock' /> {meeting.date} |
+            <Icon name='clock' /> {format(parseISO(meeting.date), 'EEEE do LLL')} at{' '} 
+            {format(parseISO(meeting.date), 'h:mm a')} |
             <Icon name='marker' /> {meeting.venue}
           </span>
         </Segment>

@@ -3,28 +3,43 @@ import {
   UPDATE_MEETING,
   DELETE_MEETING,
   FETCH_MEETINGS
-} from "./meetingConstants";
+} from './meetingConstants';
 import {
   asyncActionStart,
   asyncActionFinish,
   asyncActionError
-} from "../async/asyncActions";
-import { fetchSampleData } from "../../app/data/mockApi";
+} from '../async/asyncActions';
+import { fetchSampleData } from '../../app/data/mockApi';
+import { toastr } from 'react-redux-toastr';
 
 export const createMeeting = meeting => {
-  return {
-    type: CREATE_MEETING,
-    payload: {
-      meeting
+  return async dispatch => {
+    try {
+      dispatch({
+        type: CREATE_MEETING,
+        payload: {
+          meeting
+        }
+      });
+      toastr.success('Success!', 'Meeting has been created');
+    } catch (error) {
+      toastr.error('Oops', 'Something went wrong! :(');
     }
   };
 };
 
 export const updateMeeting = meeting => {
-  return {
-    type: UPDATE_MEETING,
-    payload: {
-      meeting
+  return async dispatch => {
+    try {
+      dispatch({
+        type: UPDATE_MEETING,
+        payload: {
+          meeting
+        }
+      });
+      toastr.success('Success!', 'Meeting has been updated');
+    } catch (error) {
+      toastr.error('Oops', 'Something went wrong! :(');
     }
   };
 };
