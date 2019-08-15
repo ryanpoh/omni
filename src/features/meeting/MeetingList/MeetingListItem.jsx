@@ -30,17 +30,17 @@ class MeetingListItem extends Component {
         </Segment>
         <Segment>
           <span>
-            <Icon name='clock' />{' '}
-            {format(parseISO(meeting.date), 'EEEE do LLL')} at{' '}
-            {format(parseISO(meeting.date), 'h:mm a')} |
+            <Icon name='clock' />
+            {format(meeting.date.toDate(), 'EEEE do LLL')} at{' '}
+            {format(meeting.date.toDate(), 'h:mm a')} |
             <Icon name='marker' /> {meeting.venue}
           </span>
         </Segment>
         <Segment secondary>
           <List horizontal>
-            {meeting.attendees &&
-              meeting.attendees.map(attendee => (
-                <MeetingListAttendee key={attendee.id} attendee={attendee} />
+            {meeting.attendees && 
+              Object.values(meeting.attendees).map((attendee, index) => (
+                <MeetingListAttendee key={index} attendee={attendee} />
               ))}
           </List>
         </Segment>

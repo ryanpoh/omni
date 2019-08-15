@@ -6,7 +6,7 @@ class MeetingList extends Component {
     const { meetings, deleteMeeting } = this.props;
     return (
       <Fragment>
-        {meetings.map(meeting => (
+        {meetings && meetings.map(meeting => (
           <MeetingListItem
             key={meeting.id}
             meeting={meeting}

@@ -8,11 +8,10 @@ import * as serviceWorker from './serviceWorker';
 import { BrowserRouter } from 'react-router-dom';
 import { configureStore } from './app/store/configureStore';
 import ScrollToTop from './app/common/util/ScrollToTop';
-import { loadMeetings } from './features/meeting/meetingActions';
 import ReduxToastr from 'react-redux-toastr';
 
 const store = configureStore();
-store.dispatch(loadMeetings()); //runs action creator
+
 
 const rootEl = document.getElementById('root');
 

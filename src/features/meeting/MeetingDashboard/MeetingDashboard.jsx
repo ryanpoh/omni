@@ -1,13 +1,14 @@
-import React, { Component } from "react";
-import { Grid } from "semantic-ui-react";
-import { connect } from "react-redux";
-import MeetingList from "../MeetingList/MeetingList";
-import { createMeeting, updateMeeting, deleteMeeting } from "../meetingActions";
-import LoadingComponent from "../../../app/layout/LoadingComponent";
-import MeetingActivity from "../MeetingActivity/MeetingActivity";
+import React, { Component } from 'react';
+import { Grid } from 'semantic-ui-react';
+import { connect } from 'react-redux';
+import MeetingList from '../MeetingList/MeetingList';
+import { createMeeting, updateMeeting, deleteMeeting } from '../meetingActions';
+import LoadingComponent from '../../../app/layout/LoadingComponent';
+import MeetingActivity from '../MeetingActivity/MeetingActivity';
+import { firestoreConnect } from 'react-redux-firebase';
 
 const mapState = state => ({
-  meetings: state.meetings,
+  meetings: state.firestore.ordered.meetings,
   loading: state.async.loading
 });
 
@@ -18,15 +19,13 @@ const actions = {
 };
 
 class MeetingDashboard extends Component {
-
-
   handleDeleteMeeting = id => {
     this.props.deleteMeeting(id);
   };
 
   render() {
     const { meetings, loading } = this.props;
-    if (loading) return <LoadingComponent /> // inverted= {false} will a darker loading screen
+    if (loading) return <LoadingComponent />; // inverted= {false} will a darker loading screen
     return (
       <Grid>
         <Grid.Column width={10}>
@@ -46,4 +45,4 @@ class MeetingDashboard extends Component {
 export default connect(
   mapState,
   actions
-)(MeetingDashboard);
+)(firestoreConnect([{ collection: 'meetings' }])(MeetingDashboard));
