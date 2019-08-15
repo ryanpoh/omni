@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import MeetingList from "../MeetingList/MeetingList";
 import { createMeeting, updateMeeting, deleteMeeting } from "../meetingActions";
 import LoadingComponent from "../../../app/layout/LoadingComponent";
+import MeetingActivity from "../MeetingActivity/MeetingActivity";
 
 const mapState = state => ({
   meetings: state.meetings,
@@ -35,7 +36,7 @@ class MeetingDashboard extends Component {
           />
         </Grid.Column>
         <Grid.Column width={6}>
-          <h2>Activity Feed</h2>
+          <MeetingActivity />
         </Grid.Column>
       </Grid>
     );

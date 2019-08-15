@@ -3,6 +3,12 @@ import { Segment, Item, Icon, List, Button } from 'semantic-ui-react';
 import MeetingListAttendee from './MeetingListAttendee';
 import { Link } from 'react-router-dom';
 import { format, parseISO } from 'date-fns'; //curly braces are functions. non-curly are classes. data fns doesnt recognize ISO date format
+import { deleteMeeting } from '../meetingActions';
+import { connect } from 'react-redux';
+
+const actions = {
+  deleteMeeting
+};
 
 class MeetingListItem extends Component {
   render() {
@@ -24,7 +30,8 @@ class MeetingListItem extends Component {
         </Segment>
         <Segment>
           <span>
-            <Icon name='clock' /> {format(parseISO(meeting.date), 'EEEE do LLL')} at{' '} 
+            <Icon name='clock' />{' '}
+            {format(parseISO(meeting.date), 'EEEE do LLL')} at{' '}
             {format(parseISO(meeting.date), 'h:mm a')} |
             <Icon name='marker' /> {meeting.venue}
           </span>
@@ -41,7 +48,7 @@ class MeetingListItem extends Component {
           <span>{meeting.description}</span>
 
           <Button
-            onClick={() => deleteMeeting(meeting)}
+            onClick={() => deleteMeeting(meeting.id)}
             as='a'
             color='red'
             floated='right'
@@ -63,4 +70,7 @@ class MeetingListItem extends Component {
 // passes meeting into selectedMeeting function
 // onClick evt ordering is important
 
-export default MeetingListItem;
+export default connect(
+  null,
+  actions
+)(MeetingListItem);
