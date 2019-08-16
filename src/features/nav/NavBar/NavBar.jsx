@@ -13,7 +13,9 @@ const actions = {
 
 const mapState = state => ({
   //passes in whole redux auth state
-  auth: state.firebase.auth
+  auth: state.firebase.auth, // access authReducer of Firebase. http://react-redux-firebase.com/docs/auth
+  profile: state.firebase.profile // access profileReducer of  Firebase. https://github.com/prescottprue/react-redux-firebase/blob/master/docs/api/reducers.md#profilereducer
+
 });
 
 class NavBar extends Component {
@@ -31,7 +33,7 @@ class NavBar extends Component {
   };
 
   render() {
-    const { auth } = this.props; //redux auth state are passed in as props
+    const { auth, profile } = this.props; //redux auth state are passed in as props
     const authenticated = auth.isLoaded && !auth.isEmpty;
     return (
       <Menu inverted fixed='top'>
@@ -60,7 +62,7 @@ class NavBar extends Component {
           {authenticated ? (
             <SignedInMenu
               signOut={this.handleSignOut}
-              auth={auth}
+              profile={profile}
             />
           ) : (
             <SignedOutMenu

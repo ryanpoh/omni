@@ -40,7 +40,10 @@ if (module.hot) {
   });
 }
 
-render();
+store.firebaseAuthIsReady.then(() => {
+  render(); // our render won't take place until our authentication is ready and loaded by Firebase
+})
+
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

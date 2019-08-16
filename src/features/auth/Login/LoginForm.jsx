@@ -1,15 +1,17 @@
-import React from "react";
-import { Form, Segment, Button, Label } from "semantic-ui-react";
-import { Field, reduxForm } from "redux-form";
-import TextInput from "../../../app/common/form/TextInput";
-import { login } from "../authActions";
-import { connect } from "react-redux";
+import React from 'react';
+import { Form, Segment, Button, Label, Divider } from 'semantic-ui-react';
+import { Field, reduxForm } from 'redux-form';
+import TextInput from '../../../app/common/form/TextInput';
+import { login, socialLogin } from '../authActions';
+import { connect } from 'react-redux';
+import SocialLogin from '../SocialLogin/SocialLogin';
 
 const actions = {
-  login
+  login,
+  socialLogin
 };
 
-const LoginForm = ({ login, handleSubmit, error }) => {
+const LoginForm = ({ login, handleSubmit, error, socialLogin }) => {
   //handle submit is availablie because LoginForm is a ReduxForm. handleSubmit passes form fields to parameter
   return (
     <Form size='large' onSubmit={handleSubmit(login)} autoComplete='off'>
@@ -34,6 +36,8 @@ const LoginForm = ({ login, handleSubmit, error }) => {
         <Button fluid size='large' color='teal'>
           Login
         </Button>
+        <Divider horizontal>Or</Divider>
+        <SocialLogin socialLogin={socialLogin} />
       </Segment>
     </Form>
   );
@@ -42,4 +46,4 @@ const LoginForm = ({ login, handleSubmit, error }) => {
 export default connect(
   null,
   actions
-)(reduxForm({ form: "loginForm" })(LoginForm));
+)(reduxForm({ form: 'loginForm' })(LoginForm));

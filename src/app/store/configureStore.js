@@ -7,10 +7,11 @@ import thunk from 'redux-thunk';
 import firebase from '../config/firebase';
 
 const rrfConfig = {
-  //reactreduxfirebaseConfig
+  //reactreduxfirebaseConfig - for react-redux-firebase library 
   userProfile: 'users',
   attachAuthIsReady: true,
-  useFireStoreForProfile: true
+  useFirestoreForProfile: true,
+  updateProfileOnLogin: false //so that on 2nd time login, we can disable the default behavious where it will populate firestore with the whole lot of info from google/facebook
 };
 
 export const configureStore = () => {

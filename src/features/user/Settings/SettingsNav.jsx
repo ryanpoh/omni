@@ -25,7 +25,7 @@ const SettingsNav = () => {
           color='grey'
           content='Account'
         />
-        <Menu.Item as={NavLink} to='/settings/accounts'>
+        <Menu.Item as={NavLink} to='/settings/account'>
           My Account
         </Menu.Item>
       </Menu>
