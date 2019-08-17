@@ -30,8 +30,8 @@ export const registerUser = user => async (
     let createdUser = await firebase
       .auth()
       .createUserWithEmailAndPassword(user.email, user.password); // using this to have Firebase's full Auth API. https://firebase.google.com/docs/auth/web/password-auth
-    console.log(createdUser);
-    await createdUser.user.updateProfile({
+    console.log(createdUser); 
+    await createdUser.user.updateProfile({ // this updateProfile is different that the one in userActions. because in this case we are using it in against a user object returned by createUserWithEmailAndPassword. Hence we will be updating the auth part of firebase
       displayName: user.displayName
     });
     let newUser = {
