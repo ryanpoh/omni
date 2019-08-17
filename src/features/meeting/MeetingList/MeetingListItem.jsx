@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Segment, Item, Icon, List, Button } from 'semantic-ui-react';
 import MeetingListAttendee from './MeetingListAttendee';
 import { Link } from 'react-router-dom';
-import { format, parseISO } from 'date-fns'; //curly braces are functions. non-curly are classes. data fns doesnt recognize ISO date format
+import { format } from 'date-fns'; //curly braces are functions. non-curly are classes. data fns doesnt recognize ISO date format
 import { deleteMeeting } from '../meetingActions';
 import { connect } from 'react-redux';
 
@@ -38,7 +38,7 @@ class MeetingListItem extends Component {
         </Segment>
         <Segment secondary>
           <List horizontal>
-            {meeting.attendees && 
+            {meeting.attendees &&
               Object.values(meeting.attendees).map((attendee, index) => (
                 <MeetingListAttendee key={index} attendee={attendee} />
               ))}
