@@ -17,7 +17,7 @@ class BasicPage extends Component {
         <Header dividing size='large' content='Basics' />
         <Form onSubmit={handleSubmit(updateProfile)}>
           <Field
-            width={8}
+            width={8} 
             name='displayName'
             type='text'
             component={TextInput}
