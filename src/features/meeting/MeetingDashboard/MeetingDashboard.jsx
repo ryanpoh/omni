@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Grid } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import MeetingList from '../MeetingList/MeetingList';
-import { createMeeting, updateMeeting, deleteMeeting } from '../meetingActions';
+import { createMeeting, updateMeeting } from '../meetingActions';
 import LoadingComponent from '../../../app/layout/LoadingComponent';
 import MeetingActivity from '../MeetingActivity/MeetingActivity';
 import { firestoreConnect } from 'react-redux-firebase';
@@ -14,7 +14,6 @@ const mapState = state => ({
 
 const actions = {
   createMeeting,
-  deleteMeeting,
   updateMeeting
 };
 

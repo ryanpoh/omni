@@ -1,7 +1,7 @@
 import React from 'react';
 import { Segment, Image, Item, Header, Button } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
-import { format, parseISO } from 'date-fns';
+import { format } from 'date-fns';
 const meetingImageStyle = {
   filter: 'brightness(30%)'
 };
@@ -36,7 +36,7 @@ const MeetingDetailedHeader = ({ meeting }) => {
                 />
                 <p>
                   {meeting.date &&
-                    format(parseISO(meeting.date), 'EEEE do LLLL')}
+                    format(meeting.date.toDate(), 'EEEE do LLLL')}
                 </p>
                 <p>
                   Chaired by <strong>{meeting.chairedBy}</strong>
@@ -49,7 +49,7 @@ const MeetingDetailedHeader = ({ meeting }) => {
 
       <Segment attached='bottom'>
         <Button>Cancel My Place</Button>
-        <Button color='teal'>JOIN THIS EVENT</Button>
+        <Button color='teal'>JOIN THIS MEETING</Button>
 
         <Button
           as={Link}

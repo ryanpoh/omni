@@ -1,18 +1,14 @@
 import React, { Component } from 'react';
-import { Segment, Item, Icon, List, Button } from 'semantic-ui-react';
+import { Segment, Item, Icon, List, Button, Label } from 'semantic-ui-react';
 import MeetingListAttendee from './MeetingListAttendee';
 import { Link } from 'react-router-dom';
 import { format } from 'date-fns'; //curly braces are functions. non-curly are classes. data fns doesnt recognize ISO date format
-import { deleteMeeting } from '../meetingActions';
 import { connect } from 'react-redux';
 
-const actions = {
-  deleteMeeting
-};
 
 class MeetingListItem extends Component {
   render() {
-    const { meeting, deleteMeeting } = this.props;
+    const { meeting } = this.props;
     return (
       <Segment.Group>
         <Segment>
@@ -24,6 +20,14 @@ class MeetingListItem extends Component {
                 <Item.Description>
                   Chaired by {meeting.chairedBy}
                 </Item.Description>
+                {meeting.cancelled && (
+                  <Label
+                    style={{ top: '-40px' }}
+                    ribbon='right'
+                    color='red'
+                    content='This meeting has been cancelled'
+                  />
+                )}
               </Item.Content>
             </Item>
           </Item.Group>
@@ -48,13 +52,6 @@ class MeetingListItem extends Component {
           <span>{meeting.description}</span>
 
           <Button
-            onClick={() => deleteMeeting(meeting.id)}
-            as='a'
-            color='red'
-            floated='right'
-            content='Delete'
-          />
-          <Button
             as={Link}
             to={`/meetings/${meeting.id}`}
             color='teal'
@@ -72,5 +69,4 @@ class MeetingListItem extends Component {
 
 export default connect(
   null,
-  actions
 )(MeetingListItem);

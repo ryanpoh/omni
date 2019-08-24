@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Segment, Grid, Icon, Button } from 'semantic-ui-react';
 import MeetingDetailedMap from './MeetingDetailedMap';
-import { format, parseISO } from 'date-fns';
+import { format } from 'date-fns';
 
 const MeetingDetailedInfo = ({ meeting }) => {
   const [isMapOpen, showMapToggle] = useState(false);
@@ -25,8 +25,8 @@ const MeetingDetailedInfo = ({ meeting }) => {
           <Grid.Column width={15}>
             {meeting.date && (
               <span>
-                {format(parseISO(meeting.date), 'EEEE do LLL')} at{' '}
-                {format(parseISO(meeting.date), 'h:mm a')}
+                {format(meeting.date.toDate(), 'EEEE do LLL')} at{' '}
+                {format(meeting.date.toDate(), 'h:mm a')}
               </span>
             )}
           </Grid.Column>
