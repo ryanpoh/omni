@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { Segment, Image, Item, Header, Button } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import { format } from 'date-fns';
@@ -15,7 +15,13 @@ const meetingImageTextStyle = {
   color: 'white'
 };
 
-const MeetingDetailedHeader = ({ meeting }) => {
+const MeetingDetailedHeader = ({
+  meeting,
+  isChair,
+  isGoing,
+  goingToMeeting,
+  cancelGoingToMeeting
+}) => {
   return (
     <Segment.Group>
       <Segment basic attached='top' style={{ padding: '0' }}>
@@ -39,7 +45,12 @@ const MeetingDetailedHeader = ({ meeting }) => {
                     format(meeting.date.toDate(), 'EEEE do LLLL')}
                 </p>
                 <p>
-                  Chaired by <strong>{meeting.chairedBy}</strong>
+                  Chaired by{' '}
+                  <strong>
+                    <Link to={`/profile/${meeting.chairUid}`} style={{color: 'white'}}>
+                      {meeting.chairedBy}
+                    </Link>
+                  </strong>
                 </p>
               </Item.Content>
             </Item>
@@ -47,18 +58,31 @@ const MeetingDetailedHeader = ({ meeting }) => {
         </Segment>
       </Segment>
 
-      <Segment attached='bottom'>
-        <Button>Cancel My Place</Button>
-        <Button color='teal'>JOIN THIS MEETING</Button>
+      <Segment attached='bottom' clearing>
+        {!isChair && (
+          <Fragment>
+            {isGoing ? (
+              <Button onClick={() => cancelGoingToMeeting(meeting)}>
+                Cancel My Attendance
+              </Button>
+            ) : (
+              <Button onClick={() => goingToMeeting(meeting)} color='teal'>
+                JOIN THIS MEETING
+              </Button>
+            )}
+          </Fragment>
+        )}
 
-        <Button
-          as={Link}
-          to={`/manage/${meeting.id}`}
-          color='orange'
-          floated='right'
-        >
-          Manage Meeting
-        </Button>
+        {isChair && (
+          <Button
+            as={Link}
+            to={`/manage/${meeting.id}`}
+            color='orange'
+            floated='right'
+          >
+            Manage Meeting
+          </Button>
+        )}
       </Segment>
     </Segment.Group>
   );

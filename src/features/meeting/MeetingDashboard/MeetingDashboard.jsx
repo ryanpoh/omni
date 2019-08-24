@@ -5,11 +5,10 @@ import MeetingList from '../MeetingList/MeetingList';
 import { createMeeting, updateMeeting } from '../meetingActions';
 import LoadingComponent from '../../../app/layout/LoadingComponent';
 import MeetingActivity from '../MeetingActivity/MeetingActivity';
-import { firestoreConnect } from 'react-redux-firebase';
+import { firestoreConnect, isLoaded } from 'react-redux-firebase';
 
 const mapState = state => ({
   meetings: state.firestore.ordered.meetings,
-  loading: state.async.loading
 });
 
 const actions = {
@@ -23,8 +22,8 @@ class MeetingDashboard extends Component {
   };
 
   render() {
-    const { meetings, loading } = this.props;
-    if (loading) return <LoadingComponent />; // inverted= {false} will a darker loading screen
+    const { meetings } = this.props;
+    if (!isLoaded(meetings)) return <LoadingComponent />; // inverted= {false} will a darker loading screen
     return (
       <Grid>
         <Grid.Column width={10}>

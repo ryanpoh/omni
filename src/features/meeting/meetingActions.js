@@ -1,12 +1,3 @@
-import {
-  FETCH_MEETINGS
-} from './meetingConstants';
-import {
-  asyncActionStart,
-  asyncActionFinish,
-  asyncActionError
-} from '../async/asyncActions';
-import { fetchSampleData } from '../../app/data/mockApi';
 import { toastr } from 'react-redux-toastr';
 import { createNewMeeting } from '../../app/common/util/helpers';
 
@@ -67,18 +58,3 @@ export const cancelToggle = (cancelled, meetingId) => async (
   }
 };
 
-
-export const loadMeetings = () => {
-  //everytime you call this action creator which will return an action below
-  return async dispatch => {
-    try {
-      dispatch(asyncActionStart());
-      let meetings = await fetchSampleData();
-      dispatch({ type: FETCH_MEETINGS, payload: { meetings } }); //dispatches an action
-      dispatch(asyncActionFinish());
-    } catch (error) {
-      console.log(error);
-      dispatch(asyncActionError());
-    }
-  };
-};

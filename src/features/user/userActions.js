@@ -113,3 +113,56 @@ export const setMainPhoto = photo => async (
     throw new Error('Problem setting main photo'); // throws error back to the photo page
   }
 };
+
+export const goingToMeeting = meeting => async (
+  dispatch,
+  getState,
+  { getFirebase, getFirestore }
+) => {
+  const firestore = getFirestore();
+  const firebase = getFirebase();
+  const user = firebase.auth().currentUser;
+  const profile = getState().firebase.profile;
+  const attendee = {
+    going: true,
+    joinDate: firestore.FieldValue.serverTimestamp(),
+    photoURL: profile.photoURL || '/assets/user.png',
+    displayName: profile.displayName,
+    chair: false
+  };
+  try {
+    await firestore.update(`meetings/${meeting.id}`, {
+      [`attendees.${user.uid}`]: attendee
+    });
+    await firestore.set(`meeting_attendee/${meeting.id}_${user.uid}`, {
+      meetingId: meeting.id,
+      userUid: user.uid,
+      meetingDate: meeting.date,
+      chair: false
+    });
+    toastr.success('Success', 'You have signed up for the meeting');
+  } catch (error) {
+    console.log(error);
+    toastr.error('Oops', 'Problem signing up to meeting');
+  }
+};
+
+export const cancelGoingToMeeting = meeting => async (
+  dispatch,
+  getState,
+  { getFirebase, getFirestore }
+) => {
+  const firestore = getFirestore();
+  const firebase = getFirebase();
+  const user = firebase.auth().currentUser;
+  try {
+    await firestore.update(`meetings/${meeting.id}`, {
+      [`attendees.${user.uid}`]: firestore.FieldValue.delete()
+    });
+    await firestore.delete(`meeting_attendee/${meeting.id}_${user.uid}`);
+    toastr.success('Success', 'You have removed yourself from the meeting');
+  } catch (error) {
+    console.log(error);
+    toastr.error('Oops', 'Something went wrong');
+  }
+};

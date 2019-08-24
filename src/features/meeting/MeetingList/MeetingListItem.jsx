@@ -4,6 +4,7 @@ import MeetingListAttendee from './MeetingListAttendee';
 import { Link } from 'react-router-dom';
 import { format } from 'date-fns'; //curly braces are functions. non-curly are classes. data fns doesnt recognize ISO date format
 import { connect } from 'react-redux';
+import { objectToArray } from '../../../app/common/util/helpers';
 
 
 class MeetingListItem extends Component {
@@ -16,9 +17,9 @@ class MeetingListItem extends Component {
             <Item>
               <Item.Image size='tiny' circular src={meeting.chairPhotoURL} />
               <Item.Content>
-                <Item.Header as='a'>{meeting.title}</Item.Header>
+                <Item.Header as={Link} to={`/meetings/${meeting.id}`} >{meeting.title}</Item.Header>
                 <Item.Description>
-                  Chaired by {meeting.chairedBy}
+                  Chaired by <Link as={Link} to={`/profile/${meeting.chairUid}`}>{meeting.chairedBy}</Link> 
                 </Item.Description>
                 {meeting.cancelled && (
                   <Label
@@ -43,8 +44,8 @@ class MeetingListItem extends Component {
         <Segment secondary>
           <List horizontal>
             {meeting.attendees &&
-              Object.values(meeting.attendees).map((attendee, index) => (
-                <MeetingListAttendee key={index} attendee={attendee} />
+              objectToArray(meeting.attendees).map((attendee) => (
+                <MeetingListAttendee key={attendee.id} attendee={attendee} />
               ))}
           </List>
         </Segment>
