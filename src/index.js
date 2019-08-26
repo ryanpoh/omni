@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import "react-redux-toastr/lib/css/react-redux-toastr.min.css";
-
+import "./index.css";
 import { Provider } from "react-redux";
 import App from "./app/layout/App";
 import * as serviceWorker from "./serviceWorker";

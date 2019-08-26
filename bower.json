@@ -1,10 +1,10 @@
 {
-  "name": "material-dashboard-react",
-  "homepage": "https://github.com/creativetimofficial/material-dashboard-react",
+  "name": "omni",
+  "homepage": "https://github.com/ryanpoh/omni",
   "authors": [
-    "creative-tim"
+    "Ryan Poh"
   ],
-  "description": "A Badass Material-UI Kit based on Material Design",
+  "description": "Curated Information for Better Decisions",
   "main": "public/index.html",
   "keywords": [
     "material",
@@ -15,7 +15,7 @@
     "google",
     "twitter"
   ],
-  "license": "Creative TIM License",
+  "license": "Personal License. No distribution unless with permission from author (Ryan Poh)",
   "ignore": [
     "**/.*",
     "node_modules",
