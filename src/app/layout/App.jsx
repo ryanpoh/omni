@@ -14,7 +14,6 @@ import ModalManager from '../../features/modals/ModalManager';
 
 // Material UI
 import Admin from '../../layouts/Admin';
-import RTL from '../../layouts/RTL';
 import 'assets/css/material-dashboard-react.css?v=1.7.0';
 
 //seperate homepage away from app
@@ -24,14 +23,13 @@ class App extends Component {
       <Fragment>
         <ModalManager />
         <Route exact path='/' component={HomePage} />
-
-        <Route path='/admin' component={Admin} />
-        <Route path='/rtl' component={RTL} />
         <Route
           path='/(.+)'
           render={() => (
             <Fragment>
               <NavBar />
+              <Route path='/admin' component={Admin} />
+
               <Container className='main'>
                 <Switch key={this.props.location.key}>
                   <Route exact path='/meetings' component={MeetingDashboard} />
@@ -39,7 +37,6 @@ class App extends Component {
                   <Route path='/employees' component={EmployeeDashboard} />
                   <Route path='/profile/:id' component={UserDetailedPage} />
                   <Route path='/settings' component={SettingsDashboard} />
-
                   <Route
                     path={['/createMeeting', '/manage/:id']}
                     component={MeetingForm}
