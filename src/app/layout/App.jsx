@@ -12,30 +12,40 @@ import UserDetailedPage from "../../features/user/UserDetailed/UserDetailedPage"
 import TestComponent from "../../features/test/TestComponent";
 import ModalManager from "../../features/modals/ModalManager";
 
+import Admin from "../../layouts/Admin";
+import RTL from "../../layouts/RTL";
+import "assets/css/material-dashboard-react.css?v=1.7.0";
+
 //seperate homepage away from app
 class App extends Component {
   render() {
     return (
       <Fragment>
         <ModalManager />
-        <Route exact path='/' component={HomePage} />
+        <Route exact path="/" component={HomePage} />
+
         <Route
-          path='/(.+)'
+          path="/(.+)"
           render={() => (
             <Fragment>
-              <NavBar />
-              <Container className='main'>
+
+              <Container className="main">
                 <Switch key={this.props.location.key}>
-                  <Route exact path='/meetings' component={MeetingDashboard} />
-                  <Route path='/meetings/:id' component={MeetingDetailedPage} />
-                  <Route path='/employees' component={EmployeeDashboard} />
-                  <Route path='/profile/:id' component={UserDetailedPage} />
-                  <Route path='/settings' component={SettingsDashboard} />
+                  <Route exact path="/meetings" component={MeetingDashboard} />
+                  <Route path="/meetings/:id" component={MeetingDetailedPage} />
+                  <Route path="/employees" component={EmployeeDashboard} />
+                  <Route path="/profile/:id" component={UserDetailedPage} />
+                  <Route path="/settings" component={SettingsDashboard} />
+
+                  
+                  <Route path="/admin" component={Admin} />
+                  <Route path="/rtl" component={RTL} />
+
                   <Route
                     path={["/createMeeting", "/manage/:id"]}
                     component={MeetingForm}
                   />
-                  <Route path='/test' component={TestComponent} />
+                  <Route path="/test" component={TestComponent} />
                 </Switch>
               </Container>
             </Fragment>
