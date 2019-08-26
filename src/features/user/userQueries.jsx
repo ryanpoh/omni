@@ -10,7 +10,7 @@ export const userDetailedQuery = ({ auth, userUid }) => {
       {
         collection: 'users',
         doc: userUid,
-        subcollection: [{ collection: 'photos' }],
+        subcollections: [{ collection: 'photos' }],
         storeAs: 'photos'
       }
     ];
