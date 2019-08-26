@@ -24,6 +24,8 @@ class App extends Component {
         <ModalManager />
         <Route exact path="/" component={HomePage} />
 
+        <Route path="/admin" component={Admin} />
+        <Route path="/rtl" component={RTL} />
         <Route
           path="/(.+)"
           render={() => (
@@ -37,9 +39,8 @@ class App extends Component {
                   <Route path="/profile/:id" component={UserDetailedPage} />
                   <Route path="/settings" component={SettingsDashboard} />
 
-                  
-                  <Route path="/admin" component={Admin} />
-                  <Route path="/rtl" component={RTL} />
+
+ 
 
                   <Route
                     path={["/createMeeting", "/manage/:id"]}
