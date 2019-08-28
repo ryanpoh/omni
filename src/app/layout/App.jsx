@@ -27,10 +27,10 @@ class App extends Component {
           path='/(.+)'
           render={() => (
             <Fragment>
-              <NavBar />
               <Route path='/admin' component={Admin} />
 
               <Container className='main'>
+                <NavBar />
                 <Switch key={this.props.location.key}>
                   <Route exact path='/meetings' component={MeetingDashboard} />
                   <Route path='/meetings/:id' component={MeetingDetailedPage} />

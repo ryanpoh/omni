@@ -5,6 +5,8 @@ import {
   asyncActionError
 } from '../async/asyncActions';
 import cuid from 'cuid';
+import firebase from '../../app/config/firebase';
+import { FETCH_MEETINGS } from 'features/meeting/meetingConstants';
 
 export const updateProfile = (
   user // isEmpty and isLoaded field properties appears automatically when we submit with reduxForm. so we have to get rid of it before we store in Firestore
@@ -164,5 +166,58 @@ export const cancelGoingToMeeting = meeting => async (
   } catch (error) {
     console.log(error);
     toastr.error('Oops', 'Something went wrong');
+  }
+};
+
+export const getUserMeetings = (userUid, activeTab) => async (
+  dispatch,
+  getState
+) => {
+  dispatch(asyncActionStart());
+  const firestore = firebase.firestore();
+  const today = new Date(Date.now());
+  let meetingsRef = firestore.collection('meeting_attendee');
+  let query;
+  switch (activeTab) {
+    case 1: //past meetings
+      query = meetingsRef
+        .where('userUid', '==', userUid)
+        .where('meetingDate', '<=', today)
+        .orderBy('meetingDate', 'desc');
+      break;
+    case 2: // future meetings
+      query = meetingsRef
+        .where('userUid', '==', userUid)
+        .where('meetingDate', '>=', today)
+        .orderBy('meetingDate');
+      break;
+    case 3: //hosted meetings
+      query = meetingsRef
+        .where('userUid', '==', userUid)
+        .where('chair', '==', true)
+        .orderBy('meetingDate');
+      break;
+    default:
+      // all meetings
+      query = meetingsRef
+        .where('userUid', '==', userUid)
+        .orderBy('meetingDate', 'desc');
+  }
+
+  try {
+    let querySnap = await query.get();
+    let meetings = [];
+
+    for (let i=0; i < querySnap.docs.length; i++) {
+      let mtg = await firestore.collection('meetings').doc(querySnap.docs[i].data().meetingId).get()
+      meetings.push({...mtg.data(), id: mtg.id})
+    }
+
+    dispatch({type: FETCH_MEETINGS, payload: {meetings}})
+
+    dispatch(asyncActionFinish());
+  } catch (error) {
+    console.log(error);
+    dispatch(asyncActionError());
   }
 };

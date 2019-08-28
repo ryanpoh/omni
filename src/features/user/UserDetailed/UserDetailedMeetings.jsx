@@ -1,38 +1,51 @@
 import React from 'react';
-import { Card, Image, Menu, Segment, Header, Grid } from 'semantic-ui-react';
+import {
+  Card,
+  Image,
+  Segment,
+  Header,
+  Grid,
+  Tab
+} from 'semantic-ui-react';
+import { Link } from 'react-router-dom';
+import format from 'date-fns/format';
 
-const UserDetailedMeetings = () => {
+const panes = [
+  { menuItem: 'All Meetings', pane: { key: 'allMeetings' } },
+  { menuItem: 'Past Meetings', pane: { key: 'pastMeetings' } },
+  { menuItem: 'Future Meetings', pane: { key: 'futureMeetings' } },
+  { menuItem: 'Chaired Meetings', pane: { key: 'chaired' } }
+];
+
+const UserDetailedMeetings = ({ meetings, meetingsLoading, changeTab }) => {
   return (
     <Grid.Column width={12}>
-      <Segment attached>
+      <Segment attached loading={meetingsLoading}>
         <Header icon='calendar' content='Events' />
-        <Menu secondary pointing>
-          <Menu.Item name='All Events' active />
-          <Menu.Item name='Past Events' />
-          <Menu.Item name='Future Events' />
-          <Menu.Item name='Events Hosted' />
-        </Menu>
+        <Tab  onTabChange={(e, data) => changeTab(e, data) } panes={panes} menu={{ secondary: true, pointing: true }} />
+        <br/>
 
         <Card.Group itemsPerRow={5}>
-          <Card>
-            <Image src={'/assets/categoryImages/drinks.jpg'} />
-            <Card.Content>
-              <Card.Header textAlign='center'>Event Title</Card.Header>
-              <Card.Meta textAlign='center'>
-                28th March 2018 at 10:00 PM
-              </Card.Meta>
-            </Card.Content>
-          </Card>
-
-          <Card>
-            <Image src={'/assets/categoryImages/drinks.jpg'} />
-            <Card.Content>
-              <Card.Header textAlign='center'>Event Title</Card.Header>
-              <Card.Meta textAlign='center'>
-                28th March 2018 at 10:00 PM
-              </Card.Meta>
-            </Card.Content>
-          </Card>
+          {meetings &&
+            meetings.map(meeting => (
+              <Card as={Link} to={`/meetings/${meeting.id}`} key={meeting.id}>
+                <Image src={`/assets/categoryImages/${meeting.category}.jpg`} />
+                <Card.Content>
+                  <Card.Header textAlign='center'>{meeting.title}</Card.Header>
+                  <Card.Meta textAlign='center'>
+                    <div>
+                      {format(
+                        meeting.date && meeting.date.toDate(),
+                        'dd MM yyyy'
+                      )}
+                    </div>
+                    <div>
+                      {format(meeting.date && meeting.date.toDate(), 'h:mm aa')}
+                    </div>
+                  </Card.Meta>
+                </Card.Content>
+              </Card>
+            ))}
         </Card.Group>
       </Segment>
     </Grid.Column>
