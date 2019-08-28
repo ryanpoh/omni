@@ -5,9 +5,11 @@ import MeetingDetailedHeader from './MeetingDetailedHeader';
 import MeetingDetailedInfo from './MeetingDetailedInfo';
 import MeetingDetailedChat from './MeetingDetailedChat';
 import MeetingDetailedSidebar from './MeetingDetailedSidebar';
-import { withFirestore } from 'react-redux-firebase';
-import { objectToArray } from '../../../app/common/util/helpers';
+import { withFirestore, firebaseConnect, isEmpty } from 'react-redux-firebase';
+import { compose } from 'redux';
+import { objectToArray, createDataTree } from '../../../app/common/util/helpers';
 import { goingToMeeting, cancelGoingToMeeting } from '../../user/userActions';
+import { addMeetingComment } from '../meetingActions';
 
 const mapState = (state, ownProps) => {
   const meetingId = ownProps.match.params.id;
@@ -24,13 +26,17 @@ const mapState = (state, ownProps) => {
   }
   return {
     meeting,
-    auth: state.firebase.auth
+    auth: state.firebase.auth,
+    meetingChat:
+      !isEmpty(state.firebase.data.meeting_chat) &&
+      objectToArray(state.firebase.data.meeting_chat[ownProps.match.params.id])
   };
 };
 
 const actions = {
   goingToMeeting,
-  cancelGoingToMeeting
+  cancelGoingToMeeting,
+  addMeetingComment
 };
 
 class MeetingDetailedPage extends Component {
@@ -50,11 +56,19 @@ class MeetingDetailedPage extends Component {
   //convert this to class so that we can use the componentDidMount Lifecycle
   render() {
     // required component in any method
-    const { meeting, auth, goingToMeeting, cancelGoingToMeeting } = this.props;
+    const {
+      meeting,
+      auth,
+      goingToMeeting,
+      cancelGoingToMeeting,
+      addMeetingComment,
+      meetingChat
+    } = this.props;
     const attendees =
       meeting && meeting.attendees && objectToArray(meeting.attendees);
     const isChair = meeting.chairUid === auth.uid;
     const isGoing = attendees && attendees.some(a => a.id === auth.uid);
+    const chatTree = !isEmpty(meetingChat) && createDataTree(meetingChat)
     return (
       <div>
         <Grid>
@@ -67,7 +81,11 @@ class MeetingDetailedPage extends Component {
               cancelGoingToMeeting={cancelGoingToMeeting}
             />
             <MeetingDetailedInfo meeting={meeting} />
-            <MeetingDetailedChat />
+            <MeetingDetailedChat
+              meetingChat={chatTree}
+              addMeetingComment={addMeetingComment}
+              meetingId={meeting.id}
+            />
           </Grid.Column>
           <Grid.Column width={6}>
             <MeetingDetailedSidebar attendees={attendees} />
@@ -78,9 +96,11 @@ class MeetingDetailedPage extends Component {
   }
 }
 
-export default withFirestore(
+export default compose(
+  withFirestore,
   connect(
     mapState,
     actions
-  )(MeetingDetailedPage)
-);
+  ),
+  firebaseConnect(props => [`meeting_chat/${props.match.params.id}`])
+)(MeetingDetailedPage);

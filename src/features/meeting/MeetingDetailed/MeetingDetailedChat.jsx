@@ -1,95 +1,131 @@
-import React, { Fragment } from "react";
-import { Header, Segment, Comment, Form, Button } from "semantic-ui-react";
+import React, { Component } from 'react';
+import { Header, Segment, Comment } from 'semantic-ui-react';
+import MeetingDetailedChatForm from './MeetingDetailedChatForm';
+import { Link } from 'react-router-dom';
+import { formatDistance } from 'date-fns';
 
-const MeetingDetailedChat = () => {
-  return (
-    <Fragment>
-      <Segment
-        textAlign='center'
-        attached='top'
-        inverted
-        color='teal'
-        style={{ border: "none" }}
-      >
-        <Header>Comments about this Meeting!</Header>
-      </Segment>
+class MeetingDetailedChat extends Component {
+  state = {
+    showReplyForm: false,
+    selectedCommentId: null
+  };
 
-      <Segment attached>
-        <Comment.Group>
-          <Comment>
-            <Comment.Avatar src='/assets/user.png' />
-            <Comment.Content>
-              <Comment.Author as='a'>Matt</Comment.Author>
-              <Comment.Metadata>
-                <div>Today at 5:42PM</div>
-              </Comment.Metadata>
-              <Comment.Text>How artistic!</Comment.Text>
-              <Comment.Actions>
-                <Comment.Action>Reply</Comment.Action>
-              </Comment.Actions>
-            </Comment.Content>
-          </Comment>
+  handleOpenReplyForm = id => () => {
+    this.setState({
+      showReplyForm: true,
+      selectedCommentId: id
+    });
+  };
 
-          <Comment>
-            <Comment.Avatar src='/assets/user.png' />
-            <Comment.Content>
-              <Comment.Author as='a'>Elliot Fu</Comment.Author>
-              <Comment.Metadata>
-                <div>Yesterday at 12:30AM</div>
-              </Comment.Metadata>
-              <Comment.Text>
-                <p>
-                  This has been very useful for my research. Thanks as well!
-                </p>
-              </Comment.Text>
-              <Comment.Actions>
-                <Comment.Action>Reply</Comment.Action>
-              </Comment.Actions>
-            </Comment.Content>
-            <Comment.Group>
-              <Comment>
-                <Comment.Avatar src='/assets/user.png' />
-                <Comment.Content>
-                  <Comment.Author as='a'>Jenny Hess</Comment.Author>
-                  <Comment.Metadata>
-                    <div>Just now</div>
-                  </Comment.Metadata>
-                  <Comment.Text>Elliot you are always so right :)</Comment.Text>
-                  <Comment.Actions>
-                    <Comment.Action>Reply</Comment.Action>
-                  </Comment.Actions>
-                </Comment.Content>
-              </Comment>
-            </Comment.Group>
-          </Comment>
+  handleCloseReplyForm = () => {
+    this.setState({
+      selectedCommentId: null,
+      showReplyForm: false
+    });
+  };
 
-          <Comment>
-            <Comment.Avatar src='/assets/user.png' />
-            <Comment.Content>
-              <Comment.Author as='a'>Joe Henderson</Comment.Author>
-              <Comment.Metadata>
-                <div>5 days ago</div>
-              </Comment.Metadata>
-              <Comment.Text>Dude, this is awesome. Thanks so much</Comment.Text>
-              <Comment.Actions>
-                <Comment.Action>Reply</Comment.Action>
-              </Comment.Actions>
-            </Comment.Content>
-          </Comment>
+  render() {
+    const { addMeetingComment, meetingId, meetingChat } = this.props;
+    const { showReplyForm, selectedCommentId } = this.state;
+    return (
+      <div>
+        <Segment
+          textAlign='center'
+          attached='top'
+          inverted
+          color='teal'
+          style={{ border: 'none' }}
+        >
+          <Header>Meeting Chat</Header>
+        </Segment>
 
-          <Form reply>
-            <Form.TextArea />
-            <Button
-              content='Add Reply'
-              labelPosition='left'
-              icon='edit'
-              primary
-            />
-          </Form>
-        </Comment.Group>
-      </Segment>
-    </Fragment>
-  );
-};
+        <Segment attached>
+          <Comment.Group>
+            {meetingChat &&
+              meetingChat.map(comment => (
+                <Comment key={comment.id}>
+                  <Comment.Avatar
+                    src={comment.photoURL || '/assets/user.png'}
+                  />
+                  <Comment.Content>
+                    <Comment.Author as={Link} to={`/profile/${comment.uid}`}>
+                      {comment.displayName}
+                    </Comment.Author>
+                    <Comment.Metadata>
+                      <div>{formatDistance(comment.date, Date.now())} ago</div>
+                    </Comment.Metadata>
+                    <Comment.Text>{comment.text}</Comment.Text>
+                    <Comment.Actions>
+                      <Comment.Action
+                        onClick={this.handleOpenReplyForm(comment.id)}
+                      >
+                        Reply
+                      </Comment.Action>
+                      {showReplyForm && selectedCommentId === comment.id && (
+                        <MeetingDetailedChatForm
+                          addMeetingComment={addMeetingComment}
+                          meetingId={meetingId}
+                          form={`reply_${comment.id}`}
+                          closeForm={this.handleCloseReplyForm}
+                          parentId={comment.id}
+                        />
+                      )}
+                    </Comment.Actions>
+                  </Comment.Content>
+                  {comment.childNodes &&
+                    comment.childNodes.map(child => (
+                      <Comment.Group>
+                        <Comment key={child.id}>
+                          <Comment.Avatar
+                            src={child.photoURL || '/assets/user.png'}
+                          />
+                          <Comment.Content>
+                            <Comment.Author
+                              as={Link}
+                              to={`/profile/${child.uid}`}
+                            >
+                              {child.displayName}
+                            </Comment.Author>
+                            <Comment.Metadata>
+                              <div>
+                                {formatDistance(child.date, Date.now())} ago
+                              </div>
+                            </Comment.Metadata>
+                            <Comment.Text>{child.text}</Comment.Text>
+                            <Comment.Actions>
+                              <Comment.Action
+                                onClick={this.handleOpenReplyForm(child.id)}
+                              >
+                                Reply
+                              </Comment.Action>
+                              {showReplyForm &&
+                                selectedCommentId === child.id && (
+                                  <MeetingDetailedChatForm
+                                    addMeetingComment={addMeetingComment}
+                                    meetingId={meetingId}
+                                    form={`reply_${child.id}`}
+                                    closeForm={this.handleCloseReplyForm}
+                                    parentId={child.parentId}
+                                  />
+                                )}
+                            </Comment.Actions>
+                          </Comment.Content>
+                        </Comment>
+                      </Comment.Group>
+                    ))}
+                </Comment>
+              ))}
+          </Comment.Group>
+          <MeetingDetailedChatForm
+            parentId={0}
+            addMeetingComment={addMeetingComment}
+            meetingId={meetingId}
+            form={`newComment`}
+          />
+        </Segment>
+      </div>
+    );
+  }
+}
 
 export default MeetingDetailedChat;
