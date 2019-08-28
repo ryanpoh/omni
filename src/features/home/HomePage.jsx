@@ -14,6 +14,7 @@ const HomePage = ({history}) => {
         />
         Omni
       </Header>
+      <Header as='h3' inverted>AI Curated Data for Better Decision Making.</Header>
       <Button onClick={() => history.push('/meetings')} size='huge' inverted>
         Get started
         <Icon name='right arrow' inverted />
