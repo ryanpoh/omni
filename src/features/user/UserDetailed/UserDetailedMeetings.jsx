@@ -21,7 +21,7 @@ const UserDetailedMeetings = ({ meetings, meetingsLoading, changeTab }) => {
   return (
     <Grid.Column width={12}>
       <Segment attached loading={meetingsLoading}>
-        <Header icon='calendar' content='Events' />
+        <Header icon='calendar' content='Meetings' />
         <Tab  onTabChange={(e, data) => changeTab(e, data) } panes={panes} menu={{ secondary: true, pointing: true }} />
         <br/>
 
