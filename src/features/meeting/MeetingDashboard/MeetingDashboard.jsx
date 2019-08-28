@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, createRef } from 'react';
 import { Grid, Loader } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import MeetingList from '../MeetingList/MeetingList';
@@ -7,9 +7,18 @@ import LoadingComponent from '../../../app/layout/LoadingComponent';
 import MeetingActivity from '../MeetingActivity/MeetingActivity';
 import { firestoreConnect } from 'react-redux-firebase';
 
+const query = [
+  {
+    collection: 'activity',
+    orderBy: ['timestamp', 'desc'],
+    limit: 5
+  }
+];
+
 const mapState = state => ({
   meetings: state.meetings,
-  loading: state.async.loading
+  loading: state.async.loading,
+  activities: state.firestore.ordered.activity
 });
 
 const actions = {
@@ -17,6 +26,8 @@ const actions = {
 };
 
 class MeetingDashboard extends Component {
+  contextRef = createRef();
+
   state = {
     moreMeetings: false,
     loadingInitial: true,
@@ -45,7 +56,6 @@ class MeetingDashboard extends Component {
   getNextMeetings = async () => {
     const { meetings } = this.props;
     let lastMeeting = meetings && meetings[meetings.length - 1];
-    console.log(lastMeeting);
     let next = await this.props.getMeetingsForDashboard(lastMeeting);
     if (next && next.docs && next.docs.length <= 1) {
       this.setState({
@@ -55,21 +65,26 @@ class MeetingDashboard extends Component {
   };
 
   render() {
-    const { loading } = this.props;
+    const { loading, activities } = this.props;
     const { moreMeetings, loadedMeetings } = this.state;
     if (this.state.loadingInitial) return <LoadingComponent />; // inverted= {false} will a darker loading screen
     return (
       <Grid>
         <Grid.Column width={10}>
-          <MeetingList
-            loading={loading}
-            meetings={loadedMeetings}
-            moreMeetings={moreMeetings}
-            getNextMeetings={this.getNextMeetings}
-          />
+          <div ref={this.contextRef}>
+            <MeetingList
+              loading={loading}
+              meetings={loadedMeetings}
+              moreMeetings={moreMeetings}
+              getNextMeetings={this.getNextMeetings}
+            />
+          </div>
         </Grid.Column>
         <Grid.Column width={6}>
-          <MeetingActivity />
+          <MeetingActivity
+            activities={activities}
+            contextRef={this.contextRef}
+          />
         </Grid.Column>
         <Grid.Column width={10}>
           <Loader active={loading} />
@@ -82,4 +97,4 @@ class MeetingDashboard extends Component {
 export default connect(
   mapState,
   actions
-)(firestoreConnect([{ collection: 'meetings' }])(MeetingDashboard));
+)(firestoreConnect(query)(MeetingDashboard));

@@ -81,7 +81,7 @@ export const getMeetingsForDashboard = lastMeeting => async (
         .doc(lastMeeting.id)
         .get());
 
-    let query; //executese the query and returns the query from firestore
+    let query; //executes the query and returns the query from firestore
 
     lastMeeting
       ? (query = meetingsRef
