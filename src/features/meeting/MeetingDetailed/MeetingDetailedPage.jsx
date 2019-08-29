@@ -27,6 +27,7 @@ const mapState = (state, ownProps) => {
   return {
     meeting,
     auth: state.firebase.auth,
+    loading: state.async.loading,
     meetingChat:
       !isEmpty(state.firebase.data.meeting_chat) &&
       objectToArray(state.firebase.data.meeting_chat[ownProps.match.params.id])
@@ -62,7 +63,8 @@ class MeetingDetailedPage extends Component {
       goingToMeeting,
       cancelGoingToMeeting,
       addMeetingComment,
-      meetingChat
+      meetingChat,
+      loading
     } = this.props;
     const attendees =
       meeting && meeting.attendees && objectToArray(meeting.attendees);
@@ -79,6 +81,7 @@ class MeetingDetailedPage extends Component {
               isChair={isChair}
               goingToMeeting={goingToMeeting}
               cancelGoingToMeeting={cancelGoingToMeeting}
+              loading={loading}
             />
             <MeetingDetailedInfo meeting={meeting} />
             <MeetingDetailedChat

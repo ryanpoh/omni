@@ -35,7 +35,8 @@ const mapState = (state, ownProps) => {
 
   return {
     initialValues: meeting,
-    meeting
+    meeting,
+    loading: state.async.loading
   };
 };
 
@@ -93,7 +94,7 @@ class MeetingForm extends Component {
         if (Object.keys(values.venueLatLng).length === 0){
           values.venueLatLng = this.props.meeting.venueLatLng
         }
-        this.props.updateMeeting(values);
+        await this.props.updateMeeting(values);
         this.props.history.push(`/meetings/${this.props.initialValues.id}`);
       } else {
         let createdMeeting = await this.props.createMeeting(values);
@@ -139,7 +140,8 @@ class MeetingForm extends Component {
       submitting,
       pristine,
       meeting,
-      cancelToggle
+      cancelToggle,
+      loading
     } = this.props;
     return (
       <Grid>
@@ -199,6 +201,7 @@ class MeetingForm extends Component {
               <Button
                 disabled={invalid || submitting || pristine} //pristine means brand new state
                 positive
+                loading={loading}
                 type='submit'
               >
                 Submit
@@ -210,6 +213,7 @@ class MeetingForm extends Component {
                     : () => history.push(`/meetings`) //wrap these in an arrow function because you don't want the functions to immediatly run wahen page loads
                 }
                 type='button'
+                disabled={loading}
               >
                 Cancel
               </Button>

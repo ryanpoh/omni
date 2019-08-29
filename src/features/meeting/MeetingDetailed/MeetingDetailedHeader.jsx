@@ -20,7 +20,8 @@ const MeetingDetailedHeader = ({
   isChair,
   isGoing,
   goingToMeeting,
-  cancelGoingToMeeting
+  cancelGoingToMeeting,
+  loading
 }) => {
   return (
     <Segment.Group>
@@ -66,7 +67,7 @@ const MeetingDetailedHeader = ({
                 Cancel My Attendance
               </Button>
             ) : (
-              <Button onClick={() => goingToMeeting(meeting)} color='teal'>
+              <Button loading={loading} onClick={() => goingToMeeting(meeting)} color='teal'>
                 JOIN THIS MEETING
               </Button>
             )}

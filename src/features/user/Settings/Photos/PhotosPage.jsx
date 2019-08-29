@@ -151,6 +151,7 @@ const PhotosPage = ({
         profile={profile}
         deletePhoto={handleDeletePhoto}
         setMainPhoto={handleSetMainPhoto}
+        loading={loading}
       />
     </Segment>
   );
@@ -164,3 +165,5 @@ export default compose(
   ),
   firestoreConnect(auth => query(auth)) //auth is passed as props into here, because the ordering 'connect' of higher order function is higher than firebaseConnect
 )(PhotosPage);
+
+

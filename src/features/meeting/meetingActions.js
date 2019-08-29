@@ -30,13 +30,45 @@ export const createMeeting = meeting => {
 };
 
 export const updateMeeting = meeting => {
-  return async (dispatch, getState, { getFirestore }) => {
-    const firestore = getFirestore();
-
+  //comparing js date with Firestore timestamp with isEqual
+  return async (dispatch, getState) => {
+    const firestore = firebase.firestore();
     try {
-      await firestore.update(`meetings/${meeting.id}`, meeting);
+      dispatch(asyncActionStart())
+      let meetingDocRef = firestore.collection('meetings').doc(meeting.id);
+      let dateEqual = getState().firestore.ordered.meetings[0].date.isEqual(
+        meeting.id
+      );
+      if (!dateEqual) {
+        let batch = firestore.batch();
+        batch.update(meetingDocRef, meeting);
+
+        let meetingAttendeeRef = firestore.collection('meeting_attendee');
+        let meetingAttendeeQuery = await meetingAttendeeRef.where(
+          'meetingId',
+          '==',
+          meeting.id
+        );
+        let meetingAttendeeQuerySnap = await meetingAttendeeQuery.get();
+
+        for (let i = 0; i < meetingAttendeeQuerySnap.docs.length; i++) {
+          let meetingAttendeeDoc = firestore
+            .collection('meeting_attendee')
+            .doc(meetingAttendeeQuerySnap.docs[i].id);
+
+          batch.update(meetingAttendeeDoc, {
+            meetingDate: meeting.date
+          });
+        }
+        await batch.commit();
+     
+      } else {
+        await meetingDocRef.update(meeting);
+      }
+      dispatch(asyncActionFinish())
       toastr.success('Success!', 'Meeting has been updated');
     } catch (error) {
+      dispatch(asyncActionError())
       toastr.error('Oops', 'Something went wrong! :(');
     }
   };
@@ -90,7 +122,7 @@ export const getMeetingsForDashboard = lastMeeting => async (
           .startAfter(startAfter)
           .limit(2)) // query for meetings after last meeting
       : (query = meetingsRef
-          .where('date', '>=', today)
+          .where('date', '>=', today) // doesnt show all meeting. only the ones after today
           .orderBy('date')
           .limit(2)); // only for initial query
 
@@ -131,8 +163,7 @@ export const addMeetingComment = (meetingId, values, parentId) => async (
     uid: user.uid,
     text: values.comment,
     date: Date.now()
-
-  }
+  };
   try {
     await firebase.push(`meeting_chat/${meetingId}`, newComment);
   } catch (error) {

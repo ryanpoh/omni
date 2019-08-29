@@ -101,50 +101,90 @@ export const deletePhoto = photo => async (
   }
 };
 
-export const setMainPhoto = photo => async (
-  dispatch,
-  getState,
-  { getFirebase }
-) => {
-  const firebase = getFirebase();
+export const setMainPhoto = photo => async (dispatch, getState) => {
+  const firestore = firebase.firestore();
+  const user = firebase.auth().currentUser;
+  const today = new Date();
+  let userDocRef = firestore.collection('users').doc(user.uid);
+  let meetingAttendeeRef = firestore.collection('meeting_attendee');
   try {
-    return await firebase.updateProfile({
+    dispatch(asyncActionStart());
+    let batch = firestore.batch();
+    batch.update(userDocRef, {
       photoURL: photo.url
     });
+
+    let meetingQuery = await meetingAttendeeRef
+      .where('userUid', '==', user.uid)
+      .where('meetingDate', '>=', today);
+
+    let meetingQuerySnap = await meetingQuery.get();
+
+    for (let i = 0; i < meetingQuerySnap.docs.length; i++) {
+      let meetingDocRef = await firestore
+        .collection('meetings')
+        .doc(meetingQuerySnap.docs[i].data().meetingId);
+      let meeting = await meetingDocRef.get();
+
+      if (meeting.data().chairUid === user.uid) {
+        batch.update(meetingDocRef, {
+          chairPhotoURL: photo.url,
+          [`attendees.${user.uid}.photoURL`]: photo.url
+        });
+      } else {
+        batch.update(meetingDocRef, {
+          [`attendees.${user.uid}.photoURL`]: photo.url
+        });
+      }
+    }
+
+    console.log(batch);
+    await batch.commit();
+    dispatch(asyncActionFinish());
   } catch (error) {
+    dispatch(asyncActionError());
     throw new Error('Problem setting main photo'); // throws error back to the photo page
   }
 };
 
-export const goingToMeeting = meeting => async (
-  dispatch,
-  getState,
-  { getFirebase, getFirestore }
-) => {
-  const firestore = getFirestore();
-  const firebase = getFirebase();
+export const goingToMeeting = meeting => async (dispatch, getState) => {
+  dispatch(asyncActionStart())
+  const firestore = firebase.firestore();
   const user = firebase.auth().currentUser;
   const profile = getState().firebase.profile;
   const attendee = {
     going: true,
-    joinDate: firestore.FieldValue.serverTimestamp(),
+    joinDate: new Date(),
     photoURL: profile.photoURL || '/assets/user.png',
     displayName: profile.displayName,
     chair: false
   };
+
+
+
   try {
-    await firestore.update(`meetings/${meeting.id}`, {
-      [`attendees.${user.uid}`]: attendee
-    });
-    await firestore.set(`meeting_attendee/${meeting.id}_${user.uid}`, {
-      meetingId: meeting.id,
-      userUid: user.uid,
-      meetingDate: meeting.date,
-      chair: false
-    });
+
+    let meetingDocRef = await firestore.collection('meetings').doc(meeting.id)
+    let meetingAttendeeDocRef = await firestore.collection('meeting_attendee').doc(`${meeting.id}_${user.uid}`)
+
+    await firestore.runTransaction(async (transaction)=> {
+      await transaction.get(meetingDocRef)
+      await transaction.update(meetingDocRef, {
+        [`attendees.${user.uid}`]: attendee
+      })
+      await transaction.set(meetingAttendeeDocRef, {
+        meetingId: meeting.id,
+        userUid: user.uid,
+        meetingDate: meeting.date,
+        chair: false
+      })
+    })
+
+    dispatch(asyncActionFinish())
     toastr.success('Success', 'You have signed up for the meeting');
   } catch (error) {
     console.log(error);
+    dispatch(asyncActionError())
     toastr.error('Oops', 'Problem signing up to meeting');
   }
 };
@@ -208,12 +248,15 @@ export const getUserMeetings = (userUid, activeTab) => async (
     let querySnap = await query.get();
     let meetings = [];
 
-    for (let i=0; i < querySnap.docs.length; i++) {
-      let mtg = await firestore.collection('meetings').doc(querySnap.docs[i].data().meetingId).get()
-      meetings.push({...mtg.data(), id: mtg.id})
+    for (let i = 0; i < querySnap.docs.length; i++) {
+      let mtg = await firestore
+        .collection('meetings')
+        .doc(querySnap.docs[i].data().meetingId)
+        .get();
+      meetings.push({ ...mtg.data(), id: mtg.id });
     }
 
-    dispatch({type: FETCH_MEETINGS, payload: {meetings}})
+    dispatch({ type: FETCH_MEETINGS, payload: { meetings } });
 
     dispatch(asyncActionFinish());
   } catch (error) {
