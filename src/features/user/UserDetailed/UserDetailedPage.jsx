@@ -27,7 +27,7 @@ const mapState = (state, ownProps) => {
   return {
     auth: state.firebase.auth, //auth needed to query for photos
     profile,
-    meetings: state.meetings,
+    meetings: state.meetings.userMeetings,
     meetingsLoading: state.async.loading,
     photos: state.firestore.ordered.photos,
     userUid,
@@ -41,8 +41,7 @@ const actions = {
 
 class UserDetailedPage extends Component {
   async componentDidMount() {
-    let meetings = await this.props.getUserMeetings(this.props.userUid);
-    console.log(meetings);
+    await this.props.getUserMeetings(this.props.userUid);
   }
 
   changeTab = (e, data) => {

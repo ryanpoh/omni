@@ -11,7 +11,7 @@ const actions = {
   socialLogin
 };
 
-const LoginForm = ({ login, handleSubmit, error, socialLogin }) => {
+const LoginForm = ({ login, handleSubmit, error, socialLogin, submitting }) => {
   //handle submit is availablie because LoginForm is a ReduxForm. handleSubmit passes form fields to parameter
   return (
     <Form size='large' onSubmit={handleSubmit(login)} autoComplete='off'>
@@ -33,7 +33,7 @@ const LoginForm = ({ login, handleSubmit, error, socialLogin }) => {
             {error}
           </Label>
         )}
-        <Button fluid size='large' color='teal'>
+        <Button loading={submitting} fluid size='large' color='teal'>
           Login
         </Button>
         <Divider horizontal>Or</Divider>

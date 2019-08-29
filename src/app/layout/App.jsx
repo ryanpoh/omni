@@ -11,10 +11,11 @@ import MeetingForm from '../../features/meeting/MeetingForm/MeetingForm';
 import UserDetailedPage from '../../features/user/UserDetailed/UserDetailedPage';
 import TestComponent from '../../features/test/TestComponent';
 import ModalManager from '../../features/modals/ModalManager';
+import NotFound from './NotFound';
 
 // Material UI
-import Admin from '../../layouts/Admin';
 import 'assets/css/material-dashboard-react.css?v=1.7.0';
+
 
 //seperate homepage away from app
 class App extends Component {
@@ -27,8 +28,6 @@ class App extends Component {
           path='/(.+)'
           render={() => (
             <Fragment>
-              <Route path='/admin' component={Admin} />
-
               <Container className='main'>
                 <NavBar />
                 <Switch key={this.props.location.key}>
@@ -42,6 +41,7 @@ class App extends Component {
                     component={MeetingForm}
                   />
                   <Route path='/test' component={TestComponent} />
+                  <Route component={NotFound} />
                 </Switch>
               </Container>
             </Fragment>

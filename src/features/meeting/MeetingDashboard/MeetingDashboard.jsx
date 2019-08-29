@@ -16,7 +16,7 @@ const query = [
 ];
 
 const mapState = state => ({
-  meetings: state.meetings,
+  meetings: state.meetings.meetings, //s25_e235 to integrate seperate fetch meeting for user
   loading: state.async.loading,
   activities: state.firestore.ordered.activity
 });

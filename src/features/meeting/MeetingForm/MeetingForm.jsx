@@ -217,6 +217,7 @@ class MeetingForm extends Component {
               >
                 Cancel
               </Button>
+              {meeting.id && 
               <Button
                 type='button'
                 color={meeting.cancelled ? 'green' : 'red'}
@@ -225,7 +226,7 @@ class MeetingForm extends Component {
                   meeting.cancelled ? 'Reactivate Meeting' : 'Cancel Meeting'
                 }
                 onClick={() => cancelToggle(!meeting.cancelled, meeting.id)}
-              />
+              />}
             </Form>
           </Segment>
         </Grid.Column>

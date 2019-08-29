@@ -7,9 +7,14 @@ import MeetingDetailedChat from './MeetingDetailedChat';
 import MeetingDetailedSidebar from './MeetingDetailedSidebar';
 import { withFirestore, firebaseConnect, isEmpty } from 'react-redux-firebase';
 import { compose } from 'redux';
-import { objectToArray, createDataTree } from '../../../app/common/util/helpers';
+import {
+  objectToArray,
+  createDataTree
+} from '../../../app/common/util/helpers';
 import { goingToMeeting, cancelGoingToMeeting } from '../../user/userActions';
 import { addMeetingComment } from '../meetingActions';
+import LoadingComponent from 'app/layout/LoadingComponent';
+import NotFound from 'app/layout/NotFound';
 
 const mapState = (state, ownProps) => {
   const meetingId = ownProps.match.params.id;
@@ -26,6 +31,7 @@ const mapState = (state, ownProps) => {
   }
   return {
     meeting,
+    requesting: state.firestore.status.requesting,
     auth: state.firebase.auth,
     loading: state.async.loading,
     meetingChat:
@@ -64,13 +70,28 @@ class MeetingDetailedPage extends Component {
       cancelGoingToMeeting,
       addMeetingComment,
       meetingChat,
-      loading
+      loading,
+      requesting,
+      match
     } = this.props;
     const attendees =
-      meeting && meeting.attendees && objectToArray(meeting.attendees);
+      meeting &&
+      meeting.attendees &&
+      objectToArray(meeting.attendees).sort((a, b) => {
+        return a.joinDate.toDate() - b.joinDate.toDate(); //sort to make sure that PIC is always on top of attendee list
+      });
     const isChair = meeting.chairUid === auth.uid;
     const isGoing = attendees && attendees.some(a => a.id === auth.uid);
-    const chatTree = !isEmpty(meetingChat) && createDataTree(meetingChat)
+    const chatTree = !isEmpty(meetingChat) && createDataTree(meetingChat);
+    const loadingMeeting = requesting[`meetings/${match.params.id}`];
+
+    if (loadingMeeting) {
+      return <LoadingComponent />;
+    }
+    if (Object.keys(meeting).length === 0) {
+      //handle when there is no meeting since invalid url path
+      return <NotFound />;
+    }
     return (
       <div>
         <Grid>

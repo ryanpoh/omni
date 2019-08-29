@@ -6,7 +6,7 @@ import {
 } from '../async/asyncActions';
 import cuid from 'cuid';
 import firebase from '../../app/config/firebase';
-import { FETCH_MEETINGS } from 'features/meeting/meetingConstants';
+import { FETCH_USER_MEETINGS } from 'features/meeting/meetingConstants';
 
 export const updateProfile = (
   user // isEmpty and isLoaded field properties appears automatically when we submit with reduxForm. so we have to get rid of it before we store in Firestore
@@ -137,8 +137,6 @@ export const setMainPhoto = photo => async (dispatch, getState) => {
         });
       }
     }
-
-    console.log(batch);
     await batch.commit();
     dispatch(asyncActionFinish());
   } catch (error) {
@@ -148,7 +146,7 @@ export const setMainPhoto = photo => async (dispatch, getState) => {
 };
 
 export const goingToMeeting = meeting => async (dispatch, getState) => {
-  dispatch(asyncActionStart())
+  dispatch(asyncActionStart());
   const firestore = firebase.firestore();
   const user = firebase.auth().currentUser;
   const profile = getState().firebase.profile;
@@ -160,31 +158,30 @@ export const goingToMeeting = meeting => async (dispatch, getState) => {
     chair: false
   };
 
-
-
   try {
+    let meetingDocRef = await firestore.collection('meetings').doc(meeting.id);
+    let meetingAttendeeDocRef = await firestore
+      .collection('meeting_attendee')
+      .doc(`${meeting.id}_${user.uid}`);
 
-    let meetingDocRef = await firestore.collection('meetings').doc(meeting.id)
-    let meetingAttendeeDocRef = await firestore.collection('meeting_attendee').doc(`${meeting.id}_${user.uid}`)
-
-    await firestore.runTransaction(async (transaction)=> {
-      await transaction.get(meetingDocRef)
+    await firestore.runTransaction(async transaction => {
+      await transaction.get(meetingDocRef);
       await transaction.update(meetingDocRef, {
         [`attendees.${user.uid}`]: attendee
-      })
+      });
       await transaction.set(meetingAttendeeDocRef, {
         meetingId: meeting.id,
         userUid: user.uid,
         meetingDate: meeting.date,
         chair: false
-      })
-    })
+      });
+    });
 
-    dispatch(asyncActionFinish())
+    dispatch(asyncActionFinish());
     toastr.success('Success', 'You have signed up for the meeting');
   } catch (error) {
     console.log(error);
-    dispatch(asyncActionError())
+    dispatch(asyncActionError());
     toastr.error('Oops', 'Problem signing up to meeting');
   }
 };
@@ -256,7 +253,7 @@ export const getUserMeetings = (userUid, activeTab) => async (
       meetings.push({ ...mtg.data(), id: mtg.id });
     }
 
-    dispatch({ type: FETCH_MEETINGS, payload: { meetings } });
+    dispatch({ type: FETCH_USER_MEETINGS, payload: { meetings } });
 
     dispatch(asyncActionFinish());
   } catch (error) {

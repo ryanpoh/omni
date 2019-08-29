@@ -1,7 +1,8 @@
 import React, { Fragment } from 'react';
-import { Segment, Image, Item, Header, Button } from 'semantic-ui-react';
+import { Segment, Image, Item, Header, Button, Label } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import { format } from 'date-fns';
+
 const meetingImageStyle = {
   filter: 'brightness(30%)'
 };
@@ -48,7 +49,10 @@ const MeetingDetailedHeader = ({
                 <p>
                   Chaired by{' '}
                   <strong>
-                    <Link to={`/profile/${meeting.chairUid}`} style={{color: 'white'}}>
+                    <Link
+                      to={`/profile/${meeting.chairUid}`}
+                      style={{ color: 'white' }}
+                    >
                       {meeting.chairedBy}
                     </Link>
                   </strong>
@@ -60,14 +64,26 @@ const MeetingDetailedHeader = ({
       </Segment>
 
       <Segment attached='bottom' clearing>
+        {meeting.cancelled && (
+          <Label
+            size='large'
+            color='red'
+            content='The meeting has been cancelled'
+          />
+        )}
         {!isChair && (
           <Fragment>
-            {isGoing ? (
+            {isGoing && !meeting.cancelled && (
               <Button onClick={() => cancelGoingToMeeting(meeting)}>
                 Cancel My Attendance
               </Button>
-            ) : (
-              <Button loading={loading} onClick={() => goingToMeeting(meeting)} color='teal'>
+            )}
+            {!isGoing && !meeting.cancelled && (
+              <Button
+                loading={loading}
+                onClick={() => goingToMeeting(meeting)}
+                color='teal'
+              >
                 JOIN THIS MEETING
               </Button>
             )}

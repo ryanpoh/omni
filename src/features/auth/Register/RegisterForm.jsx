@@ -62,6 +62,7 @@ const RegisterForm = ({
             fluid
             size='large'
             color='teal'
+            loading={submitting}
           >
             Register
           </Button>

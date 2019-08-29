@@ -8,6 +8,7 @@ import { asyncActionError } from 'features/async/asyncActions';
 
 export const createMeeting = meeting => {
   return async (dispatch, getState, { getFirestore, getFirebase }) => {
+    dispatch(asyncActionStart())
     const firestore = getFirestore();
     const firebase = getFirebase();
     const user = firebase.auth().currentUser;
@@ -21,9 +22,11 @@ export const createMeeting = meeting => {
         meetingDate: meeting.date,
         chair: true
       });
+      dispatch(asyncActionFinish())
       toastr.success('Success!', 'Meeting has been created');
       return createdMeeting;
     } catch (error) {
+      dispatch(asyncActionError())
       toastr.error('Oops', 'Something went wrong! :(');
     }
   };
