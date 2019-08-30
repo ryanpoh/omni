@@ -13,8 +13,8 @@ import {
 } from '../../../app/common/util/helpers';
 import { goingToMeeting, cancelGoingToMeeting } from '../../user/userActions';
 import { addMeetingComment } from '../meetingActions';
-import LoadingComponent from 'app/layout/LoadingComponent';
-import NotFound from 'app/layout/NotFound';
+import LoadingComponent from '../../../app/layout/LoadingComponent';
+import NotFound from '../../../app/layout/NotFound';
 
 const mapState = (state, ownProps) => {
   const meetingId = ownProps.match.params.id;

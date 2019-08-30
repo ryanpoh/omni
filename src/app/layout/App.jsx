@@ -13,8 +13,6 @@ import TestComponent from '../../features/test/TestComponent';
 import ModalManager from '../../features/modals/ModalManager';
 import NotFound from './NotFound';
 
-// Material UI
-import 'assets/css/material-dashboard-react.css?v=1.7.0';
 
 
 //seperate homepage away from app

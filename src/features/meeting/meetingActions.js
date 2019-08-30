@@ -2,9 +2,9 @@ import { toastr } from 'react-redux-toastr';
 import { createNewMeeting } from '../../app/common/util/helpers';
 import firebase from '../../app/config/firebase';
 import { FETCH_MEETINGS } from './meetingConstants';
-import { asyncActionStart } from 'features/async/asyncActions';
-import { asyncActionFinish } from 'features/async/asyncActions';
-import { asyncActionError } from 'features/async/asyncActions';
+import { asyncActionStart } from '../../features/async/asyncActions';
+import { asyncActionFinish } from '../../features/async/asyncActions';
+import { asyncActionError } from '../../features/async/asyncActions';
 
 export const createMeeting = meeting => {
   return async (dispatch, getState, { getFirestore, getFirebase }) => {

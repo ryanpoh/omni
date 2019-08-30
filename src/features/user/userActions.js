@@ -6,7 +6,7 @@ import {
 } from '../async/asyncActions';
 import cuid from 'cuid';
 import firebase from '../../app/config/firebase';
-import { FETCH_USER_MEETINGS } from 'features/meeting/meetingConstants';
+import { FETCH_USER_MEETINGS } from '../../features/meeting/meetingConstants';
 
 export const updateProfile = (
   user // isEmpty and isLoaded field properties appears automatically when we submit with reduxForm. so we have to get rid of it before we store in Firestore
