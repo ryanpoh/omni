@@ -1,5 +1,8 @@
 body {
   background-color: rgb(234, 234, 234) !important;
+  /* Added from example dashboard */
+  -webkit-font-smoothing: antialiased;
+  -moz-font-smoothing: grayscale;
 }
 
 /*timepicker style*/
