@@ -3,6 +3,7 @@ import { reducer as FormReducer } from 'redux-form';
 import testReducer from '../../features/test/testReducer';
 import { reducer as ToastrReducer } from 'react-redux-toastr';
 import meetingReducer from '../../features/meeting/meetingReducer';
+import jobReducer from '../../features/job/jobReducer';
 import modalReducer from '../../features/modals/modalReducer';
 import authReducer from '../../features/auth/authReducer';
 import asyncReducer from '../../features/async/asyncReducer';
@@ -15,6 +16,7 @@ const rootReducer = combineReducers({
   form: FormReducer,
   test: testReducer,
   meetings: meetingReducer,
+  jobs: jobReducer,
   modals: modalReducer,
   auth: authReducer,
   async: asyncReducer,

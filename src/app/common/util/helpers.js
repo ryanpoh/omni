@@ -24,6 +24,16 @@ export const createNewMeeting = (user, photoURL, meeting) => {
     }
 }
 
+export const createNewJob = (user, photoURL, job) => {
+    return {
+        ...job, //form values
+        chairUid: user.uid,
+        chairedBy: user.displayName,
+        chairPhotoURL: photoURL || '/assets/user.png',
+        created: new Date()
+    }
+}
+
 export const createDataTree = dataset => {
     let hashTable = Object.create(null);
     dataset.forEach(a => hashTable[a.id] = {...a, childNodes: []});

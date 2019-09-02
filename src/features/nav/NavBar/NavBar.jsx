@@ -1,35 +1,34 @@
-import React, { Component, Fragment } from "react"; //Fragment to get rid of adjacent element error {authenticated && xxx}
-import { connect } from "react-redux";
-import { withFirebase } from "react-redux-firebase";
-import { Menu, Container, Button } from "semantic-ui-react";
-import { NavLink, Link, withRouter } from "react-router-dom";
-import SignedInMenu from "../Menus/SignedInMenu";
-import SignedOutMenu from "../Menus/SignedOutMenu";
-import { openModal } from "../../modals/modalActions";
+import React, { Component, Fragment } from 'react'; //Fragment to get rid of adjacent element error {authenticated && xxx}
+import { connect } from 'react-redux';
+import { withFirebase } from 'react-redux-firebase';
+import { Menu, Container, Button } from 'semantic-ui-react';
+import { NavLink, Link, withRouter } from 'react-router-dom';
+import SignedInMenu from '../Menus/SignedInMenu';
+import SignedOutMenu from '../Menus/SignedOutMenu';
+import { openModal } from '../../modals/modalActions';
 
 const actions = {
-  openModal,
+  openModal
 };
 
 const mapState = state => ({
   //passes in whole redux auth state
   auth: state.firebase.auth, // access authReducer of Firebase. http://react-redux-firebase.com/docs/auth
   profile: state.firebase.profile // access profileReducer of  Firebase. https://github.com/prescottprue/react-redux-firebase/blob/master/docs/api/reducers.md#profilereducer
-
 });
 
 class NavBar extends Component {
   handleSignIn = () => {
-    this.props.openModal("LoginModal");
+    this.props.openModal('LoginModal');
   };
 
   handleRegister = () => {
-    this.props.openModal("RegisterModal");
+    this.props.openModal('RegisterModal');
   };
 
   handleSignOut = () => {
     this.props.firebase.logout();
-    this.props.history.push("/");
+    this.props.history.push('/');
   };
 
   render() {
@@ -56,6 +55,14 @@ class NavBar extends Component {
                   inverted
                   content='Create Meeting'
                 />
+                <Button
+                  as={Link}
+                  to='/createJob'
+                  floated='right'
+                  positive
+                  inverted
+                  content='Create Job'
+                />
               </Menu.Item>
             </Fragment>
           )}
@@ -63,7 +70,7 @@ class NavBar extends Component {
             <SignedInMenu
               signOut={this.handleSignOut}
               profile={profile}
-              auth = {auth}
+              auth={auth}
             />
           ) : (
             <SignedOutMenu
