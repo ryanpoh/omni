@@ -44,7 +44,7 @@ class NavBar extends Component {
           <Menu.Item as={NavLink} exact to='/meetings' name='Meetings' />
           {authenticated && (
             <Fragment>
-              <Menu.Item as={NavLink} exact to='/analytics' name='Analytics' />
+              <Menu.Item href='https://limitless-beach-13561.herokuapp.com/home' name='Analytics' />
               <Menu.Item as={NavLink} exact to='/test' name='Test' />
               <Menu.Item>
                 <Button

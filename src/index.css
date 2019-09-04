@@ -1,8 +1,14 @@
 body {
-  background-color: rgb(234, 234, 234) !important;
-  /* Added from example dashboard */
+  /*background-color: rgb(234, 234, 234) !important; */
+  background: url(https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80) no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  /* Added from example dashboard 
   -webkit-font-smoothing: antialiased;
-  -moz-font-smoothing: grayscale;
+  -moz-font-smoothing: grayscale; */
+  
 }
 
 /*timepicker style*/
