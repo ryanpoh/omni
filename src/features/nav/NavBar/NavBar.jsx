@@ -39,13 +39,12 @@ class NavBar extends Component {
         <Container>
           <Menu.Item as={NavLink} exact to='/' header>
             <img src='/assets/omni.png' alt='logo' />
-            OMNI
+            OMNI DASHBOARD
           </Menu.Item>
           <Menu.Item as={NavLink} exact to='/meetings' name='Meetings' />
           {authenticated && (
             <Fragment>
-              <Menu.Item href='https://limitless-beach-13561.herokuapp.com/home' name='Analytics' />
-              <Menu.Item as={NavLink} exact to='/test' name='Test' />
+              <Menu.Item href='http://www.analytics-omni-monash.com/home' name='Analytics' />
               <Menu.Item>
                 <Button
                   as={Link}
@@ -54,14 +53,6 @@ class NavBar extends Component {
                   positive
                   inverted
                   content='Create Meeting'
-                />
-                <Button
-                  as={Link}
-                  to='/createJob'
-                  floated='right'
-                  positive
-                  inverted
-                  content='Create Job'
                 />
               </Menu.Item>
             </Fragment>
