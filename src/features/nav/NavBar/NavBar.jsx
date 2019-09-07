@@ -44,7 +44,7 @@ class NavBar extends Component {
           <Menu.Item as={NavLink} exact to='/meetings' name='Meetings' />
           {authenticated && (
             <Fragment>
-              <Menu.Item href='http://www.analytics-omni-monash.com/home' name='Analytics' />
+              <Menu.Item href='http://www.analytics-omni-monash.com' name='Analytics' />
               <Menu.Item>
                 <Button
                   as={Link}
