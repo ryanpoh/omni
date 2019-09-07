@@ -41,7 +41,7 @@ class NavBar extends Component {
             <img src='/assets/omni.png' alt='logo' />
             OMNI DASHBOARD
           </Menu.Item>
-          <Menu.Item as={NavLink} exact to='/meetings' name='Team Feed' />
+          <Menu.Item as={NavLink} exact to='/meetings' name='Manage' />
           {authenticated && (
             <Fragment>
               <Menu.Item>
@@ -51,14 +51,9 @@ class NavBar extends Component {
                   floated='right'
                   positive
                   inverted
-                  content='POST'
+                  content='Create Meeting'
                 />
               </Menu.Item>
-
-              <Menu.Item position='right'
-                href='http://www.analytics-omni-monash.com/home'
-                name='Analytics'
-              />
             </Fragment>
           )}
           {authenticated ? (
