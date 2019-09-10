@@ -41,7 +41,7 @@ class NavBar extends Component {
             <img src='/assets/omni.png' alt='logo' />
             OMNI DASHBOARD
           </Menu.Item>
-          <Menu.Item as={NavLink} exact to='/meetings' name='Manage' />
+          <Menu.Item as={NavLink} exact to='/meetings' name='Town Hall' />
           {authenticated && (
             <Fragment>
               <Menu.Item>
